@@ -1,0 +1,19 @@
+{
+  "name": "webglwrapper",
+  "version": "0.1.0tsc",
+  "description": "This is the 3DCG engine with WebGL",
+  "main": "src/main.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src/main.ts"
+  },
+  "author": "Fogrex",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fogrexon/CGEngine.git"
+  }
+}
