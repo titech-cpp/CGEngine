@@ -13,6 +13,7 @@ function Geometry(vertex, normal, uv, index)
       uvVBO,
       indexIBO;
 
+  // VBOの作成
   function createVBO(gl, data)
   {
     var vbo = gl.createBuffer();
@@ -23,6 +24,7 @@ function Geometry(vertex, normal, uv, index)
     return vbo;
   }
 
+  // IBOの作成
   function createIBO(gl, index)
   {
     var ibo = gl.createBuffer();
@@ -33,7 +35,8 @@ function Geometry(vertex, normal, uv, index)
 
     return ibo;
   }
-
+  
+  // Attribute情報の設定
   this.setupAttribute = function(gl, program)
   {
     vertexLocation  = gl.getAttributeLocation(program, 'vertex');
@@ -45,6 +48,7 @@ function Geometry(vertex, normal, uv, index)
     indexIBO        = createIBO(index);
   }
 
+  // Attributeをglに設定
   this.attachAttribute = function(gl)
   {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexVBO);
