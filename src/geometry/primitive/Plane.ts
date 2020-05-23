@@ -1,29 +1,29 @@
 import { Geometry } from '../Geometry';
 
-function Plane()
+const Plane = (): Geometry =>
 {
-  var vertex = [
+  const vertex: number[] = [
     0.5, 0.5, 0.0,
     -0.5, 0.5, 0.0,
     -0.5, -0.5, 0.0,
     0.5, -0.5, 0.0,
   ];
-  var normal = [
+  const normal: number[] = [
     0.0, 0.0, 1.0,
     0.0, 0.0, 1.0,
     0.0, 0.0, 1.0,
     0.0, 0.0, 1.0,
   ];
-  var uv = [
+  const uv: number[] = [
     1.0, 1.0,
     0.0, 1.0,
     0.0, 0.0,
     1.0, 0.0,
   ];
-  var index = [
+  const index: number[] = [
     0, 1, 2,
     0, 2, 3,
   ];
 
-  return Geometry(vertex, normal, uv, index);
+  return new Geometry(vertex, normal, uv, index);
 }
