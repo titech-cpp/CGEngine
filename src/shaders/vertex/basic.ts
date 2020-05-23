@@ -1,4 +1,4 @@
-var basicVertex = `
+const basicVertex: string = `
   attribute vec3 vertex;
   attribute vec3 normal;
   attribute vec2 uv;

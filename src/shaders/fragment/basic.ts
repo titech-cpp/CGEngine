@@ -1,4 +1,4 @@
-var basicFragment = `
+const basicFragment: string = `
 precision mediump float;
 uniform vec4 mainColor;
 
