@@ -26,6 +26,34 @@ class Vector4 {
     return new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w).length();
   }
 
+  public add(a: Vector4 | number): Vector4 {
+    if (a instanceof Vector4) {
+      return new Vector4(this.x + a.x, this.y + a.y, this.z + a.z, this.w + a.w);
+    }
+    return new Vector4(this.x + a, this.y + a, this.z + a, this.w + a);
+  }
+
+  public subtract(a: Vector4 | number): Vector4 {
+    if (a instanceof Vector4) {
+      return new Vector4(this.x - a.x, this.y - a.y, this.z - a.z, this.w - a.w);
+    }
+    return new Vector4(this.x - a, this.y - a, this.z - a, this.w - a);
+  }
+
+  public multiply(a: Vector4 | number): Vector4 {
+    if (a instanceof Vector4) {
+      return new Vector4(this.x * a.x, this.y * a.y, this.z * a.z, this.w * a.w);
+    }
+    return new Vector4(this.x * a, this.y * a, this.z * a, this.w * a);
+  }
+
+  public divide(a: Vector4 | number): Vector4 {
+    if (a instanceof Vector4) {
+      return new Vector4(this.x / a.x, this.y / a.y, this.z / a.z, this.w / a.w);
+    }
+    return new Vector4(this.x / a, this.y / a, this.z / a, this.w / a);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z, this.w]);
   }

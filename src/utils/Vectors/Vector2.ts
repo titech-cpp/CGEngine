@@ -20,6 +20,26 @@ class Vector2 {
     return new Vector2(a.x - b.x, a.y - b.y).length();
   }
 
+  public add(a: Vector2 | number): Vector2 {
+    if (a instanceof Vector2) return new Vector2(this.x + a.x, this.y + a.y);
+    return new Vector2(this.x + a, this.y + a);
+  }
+
+  public subtract(a: Vector2 | number): Vector2 {
+    if (a instanceof Vector2) return new Vector2(this.x - a.x, this.y - a.y);
+    return new Vector2(this.x - a, this.y - a);
+  }
+
+  public multiply(a: Vector2 | number): Vector2 {
+    if (a instanceof Vector2) return new Vector2(this.x * a.x, this.y * a.y);
+    return new Vector2(this.x * a, this.y * a);
+  }
+
+  public divide(a: Vector2 | number): Vector2 {
+    if (a instanceof Vector2) return new Vector2(this.x / a.x, this.y / a.y);
+    return new Vector2(this.x / a, this.y / a);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y]);
   }

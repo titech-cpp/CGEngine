@@ -23,6 +23,26 @@ class Vector3 {
     return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z).length();
   }
 
+  public add(a: Vector3 | number): Vector3 {
+    if (a instanceof Vector3) return new Vector3(this.x + a.x, this.y + a.y, this.z + a.z);
+    return new Vector3(this.x + a, this.y + a, this.z + a);
+  }
+
+  public subtract(a: Vector3 | number): Vector3 {
+    if (a instanceof Vector3) return new Vector3(this.x - a.x, this.y - a.y, this.z - a.z);
+    return new Vector3(this.x - a, this.y - a, this.z - a);
+  }
+
+  public multiply(a: Vector3 | number): Vector3 {
+    if (a instanceof Vector3) return new Vector3(this.x * a.x, this.y * a.y, this.z * a.z);
+    return new Vector3(this.x * a, this.y * a, this.z * a);
+  }
+
+  public divide(a: Vector3 | number): Vector3 {
+    if (a instanceof Vector3) return new Vector3(this.x / a.x, this.y / a.y, this.z / a.z);
+    return new Vector3(this.x / a, this.y / a, this.z / a);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z]);
   }
