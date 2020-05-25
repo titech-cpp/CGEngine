@@ -24,6 +24,10 @@ class Vector2
   {
     return new Vector2(a.x - b.x, a.y - b.y).length();
   }
+
+  public getArray(): Float32Array {
+    return new Float32Array([this.x, this.y]);
+  }
 }
 
 class Vector3
@@ -52,6 +56,10 @@ class Vector3
   public static distance(a: Vector3, b: Vector3): number
   {
     return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z).length();
+  }
+
+  public getArray(): Float32Array {
+    return new Float32Array([this.x, this.y, this.z]);
   }
 }
 
@@ -83,6 +91,10 @@ class Vector4
   public static distance(a: Vector4, b: Vector4): number
   {
     return new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w).length();
+  }
+  
+  public getArray(): Float32Array {
+    return new Float32Array([this.x, this.y, this.z, this.w]);
   }
 }
 
