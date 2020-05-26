@@ -54,6 +54,14 @@ class Vector4 {
     return new Vector4(this.x / a, this.y / a, this.z / a, this.w / a);
   }
 
+  public normalize(): Vector4 {
+    return this.divide(this.length());
+  }
+
+  public dot(a: Vector4): number {
+    return this.x * a.x + this.y * a.y + this.z * a.z + this.w * a.w;
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z, this.w]);
   }

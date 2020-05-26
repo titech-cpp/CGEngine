@@ -43,6 +43,22 @@ class Vector3 {
     return new Vector3(this.x / a, this.y / a, this.z / a);
   }
 
+  public normalize(): Vector3 {
+    return this.divide(this.length());
+  }
+
+  public dot(a: Vector3): number {
+    return this.x * a.x + this.y * a.y + this.z * a.z;
+  }
+
+  public cross(a: Vector3): Vector3 {
+    return new Vector3(
+      this.y * a.z - this.z * a.y,
+      this.z * a.x - this.x * a.z,
+      this.x * a.y - this.y * a.x,
+    );
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z]);
   }

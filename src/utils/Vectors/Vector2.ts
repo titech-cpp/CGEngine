@@ -40,6 +40,14 @@ class Vector2 {
     return new Vector2(this.x / a, this.y / a);
   }
 
+  public normalize(): Vector2 {
+    return this.divide(this.length());
+  }
+
+  public dot(a: Vector2): number {
+    return this.x * a.x + this.y * a.y;
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y]);
   }
