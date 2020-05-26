@@ -49,25 +49,41 @@ class Matrix4 {
   }
 
   // 計算
-  add(addMat: Matrix4): Matrix4 {
+  add(add: Matrix4 | number): Matrix4 {
     const m: number[] = this.matrix;
-    const n: number[] = addMat.matrix;
+    if (add instanceof Matrix4) {
+      const n: number[] = add.matrix;
+      return new Matrix4([
+        m[0] + n[0], m[1] + n[1], m[2] + n[2], m[3] + n[3],
+        m[4] + n[4], m[5] + n[5], m[6] + n[6], m[7] + n[7],
+        m[8] + n[8], m[9] + n[9], m[10] + n[10], m[11] + n[11],
+        m[12] + n[12], m[13] + n[13], m[14] + n[14], m[15] + n[15],
+      ]);
+    }
     return new Matrix4([
-      m[0] + n[0], m[1] + n[1], m[2] + n[2], m[3] + n[3],
-      m[4] + n[4], m[5] + n[5], m[6] + n[6], m[7] + n[7],
-      m[8] + n[8], m[9] + n[9], m[10] + n[10], m[11] + n[11],
-      m[12] + n[12], m[13] + n[13], m[14] + n[14], m[15] + n[15],
+      m[0] + add, m[1] + add, m[2] + add, m[3] + add,
+      m[4] + add, m[5] + add, m[6] + add, m[7] + add,
+      m[8] + add, m[9] + add, m[10] + add, m[11] + add,
+      m[12] + add, m[13] + add, m[14] + add, m[15] + add,
     ]);
   }
 
-  subtract(subMat: Matrix4): Matrix4 {
+  subtract(sub: Matrix4): Matrix4 {
     const m: number[] = this.matrix;
-    const n: number[] = subMat.matrix;
+    if (sub instanceof Matrix4) {
+      const n: number[] = sub.matrix;
+      return new Matrix4([
+        m[0] - n[0], m[1] - n[1], m[2] - n[2], m[3] - n[3],
+        m[4] - n[4], m[5] - n[5], m[6] - n[6], m[7] - n[7],
+        m[8] - n[8], m[9] - n[9], m[10] - n[10], m[11] - n[11],
+        m[12] - n[12], m[13] - n[13], m[14] - n[14], m[15] - n[15],
+      ]);
+    }
     return new Matrix4([
-      m[0] - n[0], m[1] - n[1], m[2] - n[2], m[3] - n[3],
-      m[4] - n[4], m[5] - n[5], m[6] - n[6], m[7] - n[7],
-      m[8] - n[8], m[9] - n[9], m[10] - n[10], m[11] - n[11],
-      m[12] - n[12], m[13] - n[13], m[14] - n[14], m[15] - n[15],
+      m[0] + sub, m[1] + sub, m[2] + sub, m[3] + sub,
+      m[4] + sub, m[5] + sub, m[6] + sub, m[7] + sub,
+      m[8] + sub, m[9] + sub, m[10] + sub, m[11] + sub,
+      m[12] + sub, m[13] + sub, m[14] + sub, m[15] + sub,
     ]);
   }
 
@@ -133,7 +149,7 @@ class Matrix4 {
     const y = i * p - l * m; const z = j * o - k * n;
     const A = j * p - l * n; const B = k * p - l * o;
     let ivd = (q * B - r * A + s * z + t * y - u * x + v * w);
-    if (ivd === 0) throw new Error('det A == 0');
+    if (ivd === 0) throw new Error('detA == 0');
     ivd = 1 / ivd;
 
     const dest: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
