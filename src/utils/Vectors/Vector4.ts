@@ -14,6 +14,14 @@ class Vector4 {
     this.w = _w;
   }
 
+  public set(x: number, y: number, z: number, w: number): Vector4 {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
+    return this;
+  }
+
   public length2(): number {
     return this.x ** 2.0 + this.y ** 2.0 + this.z ** 2.0 + this.w ** 2.0;
   }
@@ -22,8 +30,10 @@ class Vector4 {
     return Math.sqrt(this.length2());
   }
 
-  public static distance(a: Vector4, b: Vector4): number {
-    return new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w).length();
+  public distance(a: Vector4): number {
+    return Math.sqrt(
+      (this.x - a.x) ** 2 + (this.y - a.y) ** 2 + (this.z - a.z) ** 2 + (this.w - a.w) ** 2,
+    );
   }
 
   public add(a: Vector4 | number): Vector4 {

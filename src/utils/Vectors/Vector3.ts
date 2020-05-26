@@ -11,6 +11,13 @@ class Vector3 {
     this.z = _z;
   }
 
+  public set(x: number, y: number, z: number): Vector3 {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    return this;
+  }
+
   public length2(): number {
     return this.x ** 2.0 + this.y ** 2.0 + this.z ** 2.0;
   }
@@ -19,8 +26,10 @@ class Vector3 {
     return Math.sqrt(this.length2());
   }
 
-  public static distance(a: Vector3, b: Vector3): number {
-    return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z).length();
+  public distance(a: Vector3): number {
+    return Math.sqrt(
+      (this.x - a.x) ** 2 + (this.y - a.y) ** 2 + (this.z - a.z) ** 2,
+    );
   }
 
   public add(a: Vector3 | number): Vector3 {

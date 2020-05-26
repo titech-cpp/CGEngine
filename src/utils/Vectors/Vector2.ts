@@ -8,6 +8,12 @@ class Vector2 {
     this.y = _y;
   }
 
+  public set(x: number, y: number): Vector2 {
+    this.x = x;
+    this.y = y;
+    return this;
+  }
+
   public length2(): number {
     return this.x ** 2.0 + this.y ** 2.0;
   }
@@ -16,8 +22,10 @@ class Vector2 {
     return Math.sqrt(this.length2());
   }
 
-  public static distance(a: Vector2, b: Vector2): number {
-    return new Vector2(a.x - b.x, a.y - b.y).length();
+  public distance(a: Vector2): number {
+    return Math.sqrt(
+      (this.x - a.x) ** 2 + (this.y - a.y) ** 2,
+    );
   }
 
   public add(a: Vector2 | number): Vector2 {
