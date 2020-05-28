@@ -1,13 +1,14 @@
 
-class Color
-{
+class Color {
   public r: number;
+
   public g: number;
+
   public b: number;
+
   public a: number;
 
-  constructor(_r: number, _g: number, _b: number, _a: number | undefined)
-  {
+  constructor(_r: number, _g: number, _b: number, _a: number | undefined) {
     this.r = _r;
     this.g = _g;
     this.b = _b;
@@ -15,4 +16,4 @@ class Color
   }
 }
 
-export { Color }
+export { Color };
