@@ -34,7 +34,7 @@ const uniformSwitcher = (
   }
 };
 
-class useShader {
+class Material {
   private vertexSource: string;
 
   private fragmentSource: string;
