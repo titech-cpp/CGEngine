@@ -62,6 +62,15 @@ class Material {
     compileShader(gl, <WebGLShader> this.vertexShader, this.vertexSource);
     compileShader(gl, <WebGLShader> this.fragmentShader, this.fragmentSource);
 
+    gl.attachShader(program, <WebGLShader> this.vertexShader);
+    gl.attachShader(program, <WebGLShader> this.fragmentShader);
+
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error('Cannot link program');
+    }
+
     Object.entries(this.uniform).map((value) => {
       this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
         program,
@@ -78,3 +87,5 @@ class Material {
       .map((value) => uniformSwitcher(gl, value[1], this.uniform[value[0]]));
   }
 }
+
+export { Material };

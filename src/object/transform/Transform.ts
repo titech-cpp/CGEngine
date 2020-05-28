@@ -33,3 +33,5 @@ class Transform {
     return <Matrix4>(<Matrix4>p.multiply(r)).multiply(s);
   }
 }
+
+export { Transform };
