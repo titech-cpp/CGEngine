@@ -1,4 +1,4 @@
-import { Vector3, Vector4 } from '../../utils/Vector';
+import { Vector3 } from '../../utils/Vector';
 import { Quartanion } from '../../utils/Quarternion';
 import { Matrix4 } from '../../utils/Matrix';
 
