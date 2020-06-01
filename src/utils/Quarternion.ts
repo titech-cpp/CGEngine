@@ -67,6 +67,14 @@ class Quartanion {
     }
     return <Vector4> this.matrix().multiply(a);
   }
+
+  public equal(a: Quartanion): boolean {
+    return this.v.equal(a.v) && this.w === a.w;
+  }
+
+  public copy(): Quartanion {
+    return new Quartanion(this.v.copy(), this.w);
+  }
 }
 
 export { Quartanion };

@@ -72,6 +72,14 @@ class Vector4 {
     return this.x * a.x + this.y * a.y + this.z * a.z + this.w * a.w;
   }
 
+  public equal(a: Vector4): boolean {
+    return this.x === a.x && this.y === a.y && this.z === a.z && this.w === a.w;
+  }
+
+  public copy(): Vector4 {
+    return new Vector4(this.x, this.y, this.z, this.w);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z, this.w]);
   }

@@ -68,6 +68,14 @@ class Vector3 {
     );
   }
 
+  public equal(a: Vector3): boolean {
+    return this.x === a.x && this.y === a.y && this.z === a.z;
+  }
+
+  public copy(): Vector3 {
+    return new Vector3(this.x, this.y, this.z);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y, this.z]);
   }
