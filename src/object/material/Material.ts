@@ -1,5 +1,5 @@
 import { Vector2, Vector3, Vector4 } from '../../utils/Vector';
-import { Matrix4 } from '../../utils/Matrixes/Matrix4';
+import { Matrix4 } from '../../utils/Matrix';
 
 type UniformType = number | Vector2 | Vector3 | Vector4 | Matrix4 | null;
 

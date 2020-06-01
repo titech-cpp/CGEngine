@@ -1,5 +1,5 @@
 import { Vector3, Vector4 } from './Vector';
-import { Matrix4 } from './Matrixes/Matrix4';
+import { Matrix4 } from './matrixes/Matrix4';
 
 class Quartanion {
   v: Vector3;
@@ -55,6 +55,79 @@ class Quartanion {
       2 * (x * z + y * w), 2 * (y * z - x * w), z ** 2 + w ** 2 - x ** 2 - y ** 2, 0,
       0, 0, 0, 1,
     ]);
+  }
+
+  fromMatrix(mat: Matrix4): Quartanion {
+    const m00: number = mat.matrix[0];
+    const m10: number = mat.matrix[1];
+    const m20: number = mat.matrix[2];
+    const m30: number = mat.matrix[3];
+    const m01: number = mat.matrix[4];
+    const m11: number = mat.matrix[5];
+    const m21: number = mat.matrix[6];
+    const m31: number = mat.matrix[7];
+    const m02: number = mat.matrix[8];
+    const m12: number = mat.matrix[9];
+    const m22: number = mat.matrix[10];
+    const element = [
+      m00 - m11 - m22 + 1,
+      -m00 + m11 - m22 + 1,
+      -m00 - m11 + m22 + 1,
+      m00 + m11 + m22 + 1,
+    ];
+
+    let maxIndex: number = 0;
+    maxIndex = element[maxIndex] < element[1] ? 1 : maxIndex;
+    maxIndex = element[maxIndex] < element[2] ? 2 : maxIndex;
+    maxIndex = element[maxIndex] < element[3] ? 3 : maxIndex;
+
+    if (element[maxIndex] < 0) {
+      this.v = new Vector3(0, 0, 0);
+      this.w = 1;
+      console.log('Wrong matrix');
+      return this;
+    }
+
+    const q: number[] = [0, 0, 0, 0];
+    let v: number = Math.sqrt(element[maxIndex]) * 0.5;
+    q[maxIndex] = v;
+    v = 0.25 / v;
+
+    switch (maxIndex) {
+      case 0: {
+        q[1] = (m10 + m01) * v;
+        q[2] = (m02 + m20) * v;
+        q[3] = (m21 - m12) * v;
+        break;
+      }
+      case 1: {
+        q[0] = (m10 + m01) * v;
+        q[2] = (m21 + m12) * v;
+        q[3] = (m02 - m20) * v;
+        break;
+      }
+      case 2: {
+        q[0] = (m02 + m20) * v;
+        q[1] = (m21 + m12) * v;
+        q[3] = (m10 - m01) * v;
+        break;
+      }
+      case 3: {
+        q[0] = (m21 - m12) * v;
+        q[1] = (m02 - m20) * v;
+        q[2] = (m10 - m01) * v;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    this.v = new Vector3(q[0], q[1], q[2]);
+    // eslint-disable-next-line prefer-destructuring
+    this.w = q[3];
+
+    return this;
   }
 
   // 計算
