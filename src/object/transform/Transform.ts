@@ -27,6 +27,23 @@ class Transform {
     this.matrix = new Matrix4();
   }
 
+  lookAt(target: Vector3): Transform {
+    const z: Vector3 = target.subtract(this.position).normalize();
+    const x: Vector3 = new Vector3(0, 1, 0).cross(z).normalize();
+    const y: Vector3 = z.cross(x).normalize();
+
+    const mat4: Matrix4 = new Matrix4([
+      x.x, y.x, z.x, 0,
+      x.y, y.y, z.y, 0,
+      x.z, y.z, z.z, 0,
+      0, 0, 0, 1,
+    ]);
+
+    this.rotation.fromMatrix(mat4);
+
+    return this;
+  }
+
   update(): Matrix4 {
     if (
       this.position.equal(this.prevPos)
