@@ -1,6 +1,7 @@
 import { Vector2, Vector3, Vector4 } from '../../utils/Vector';
+import { Matrix4 } from '../../utils/Matrixes/Matrix4';
 
-type UniformType = number | Vector2 | Vector3 | Vector4;
+type UniformType = number | Vector2 | Vector3 | Vector4 | Matrix4 | null;
 
 const compileShader = (
   gl: WebGLRenderingContext,
@@ -25,6 +26,8 @@ const uniformSwitcher = (
     gl.uniform3fv(uniLocation, data.getArray());
   } else if (data instanceof Vector4) {
     gl.uniform4fv(uniLocation, data.getArray());
+  } else if (data instanceof Matrix4) {
+    gl.uniformMatrix4fv(uniLocation, false, data.getArray());
   } else if (typeof data === 'number') {
     if (data % 1.0 === 0.0) {
       gl.uniform1i(uniLocation, data);
@@ -70,6 +73,12 @@ class Material {
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       throw new Error('Cannot link program');
     }
+
+    this.uniform = {
+      mMatrix: null,
+      vpMatrix: null,
+      ...this.uniform,
+    };
 
     Object.entries(this.uniform).map((value) => {
       this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
