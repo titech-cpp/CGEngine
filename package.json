@@ -4,8 +4,9 @@
   "description": "This is the 3DCG engine with WebGL",
   "main": "src/main.js",
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint src/main.ts"
+    "build": "tsc ./src/main.ts",
+    "lint": "eslint ./src/main.ts",
+    "test": "parcel ./public/index.html"
   },
   "author": "Fogrex",
   "license": "MIT",
@@ -15,6 +16,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
+    "parcel": "^1.12.4",
     "typescript": "^3.9.3"
   },
   "repository": {
