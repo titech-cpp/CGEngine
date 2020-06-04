@@ -26,3 +26,5 @@ const Plane = (): Geometry => {
 
   return new Geometry(vertex, normal, uv, index);
 };
+
+export { Plane };

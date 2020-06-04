@@ -1,4 +1,5 @@
 export * from './camera/Camera';
+export * from './object/Entity';
 export * from './object/geometry/Geometry';
 export * as GeometryPrimitives from './object/geometry/Primitives';
 export * from './object/material/Material';

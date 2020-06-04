@@ -2,11 +2,11 @@
   "name": "webglwrapper",
   "version": "0.1.0tsc",
   "description": "This is the 3DCG engine with WebGL",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "scripts": {
-    "build": "tsc ./src/main.ts",
+    "build": "tsc ./src/main.ts --outDir ./buid/",
     "lint": "eslint ./src/main.ts",
-    "test": "parcel ./public/index.html"
+    "test": "parcel ./index.html --public-url ./dist/"
   },
   "author": "Fogrex",
   "license": "MIT",
@@ -21,6 +21,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fogrexon/CGEngine.git"
+    "url": "https://github.com/titech-cpp/CGEngine.git"
   }
 }
