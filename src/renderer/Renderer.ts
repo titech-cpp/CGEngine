@@ -1,4 +1,7 @@
 import { Color } from '../utils/Color';
+import { CameraType } from '../Camera/Camera';
+import { Entity } from '../object/Entity';
+import { Matrix4 } from '../utils/Matrix';
 
 interface RendererParameter
 {
@@ -22,16 +25,18 @@ class Renderer {
     this.parameter.clearDepth = this.parameter.clearDepth || 1.0;
   }
 
-  // カメラとオブジェクトリストが実装されてから
+  render(camera: CameraType, object: Entity) {
+    this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.depthFunc(this.gl.LEQUAL);
 
-  // render(camera, objectList)
-  // {
-  //   const clearColor: Color = <Color>this.parameter.clearColor;
-  //   this.gl.clearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-  //   this.gl.clearDepth(<number>this.parameter.clearDepth);
-  //   this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
+    const clearColor: Color = <Color> this.parameter.clearColor;
+    this.gl.clearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    this.gl.clearDepth(<number> this.parameter.clearDepth);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
-  // }
+    const vpMatrix: Matrix4 = camera.getMatrix();
+    object.render(this.gl, new Matrix4(), vpMatrix);
+  }
 }
 
 export { Renderer };

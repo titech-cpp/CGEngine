@@ -26,6 +26,7 @@ class Entity {
     this.program = <WebGLProgram>gl.createProgram();
     this.material.initialize(gl, this.program);
     this.geometry.setupAttribute(gl, this.program);
+    this.children.map((child) => child.initialize(gl));
   }
 
   render(gl: WebGLRenderingContext, parentMat: Matrix4, vpMatrix: Matrix4): void {
@@ -38,6 +39,8 @@ class Entity {
     this.material.setUniforms(gl);
     this.geometry.attachAttribute(gl);
     gl.drawElements(gl.TRIANGLES, this.geometry.getIndexLength(), gl.UNSIGNED_SHORT, 0);
+
+    this.children.map((child) => child.render(gl, thisMat, vpMatrix));
   }
 }
 
