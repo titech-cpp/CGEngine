@@ -30,7 +30,7 @@ class Entity {
 
   render(gl: WebGLRenderingContext, parentMat: Matrix4, vpMatrix: Matrix4): void {
     const thisMat: Matrix4 = <Matrix4>parentMat.multiply(
-      this.transform.update(),
+      this.transform.getMatrix(),
     );
     this.material.uniform.mMatrix = thisMat;
     this.material.uniform.vpMatrix = vpMatrix;
