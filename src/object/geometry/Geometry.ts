@@ -82,6 +82,10 @@ class Geometry {
     gl.vertexAttribPointer(this.uvLocation, 2, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexIBO);
   }
+
+  getIndexLength(): number {
+    return this.index.length;
+  }
 }
 
 export { Geometry };

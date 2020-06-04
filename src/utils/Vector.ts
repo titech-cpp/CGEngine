@@ -1,3 +1,3 @@
-export * from './Vectors/Vector2';
-export * from './Vectors/Vector3';
-export * from './Vectors/Vector4';
+export * from './vectors/Vector2';
+export * from './vectors/Vector3';
+export * from './vectors/Vector4';

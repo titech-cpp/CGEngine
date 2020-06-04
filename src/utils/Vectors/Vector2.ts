@@ -56,6 +56,14 @@ class Vector2 {
     return this.x * a.x + this.y * a.y;
   }
 
+  public equal(a: Vector2): boolean {
+    return this.x === a.x && this.y === a.y;
+  }
+
+  public copy(): Vector2 {
+    return new Vector2(this.x, this.y);
+  }
+
   public getArray(): Float32Array {
     return new Float32Array([this.x, this.y]);
   }

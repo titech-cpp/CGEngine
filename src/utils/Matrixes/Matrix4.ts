@@ -171,6 +171,10 @@ class Matrix4 {
     dest[15] = (i * t - j * r + k * q) * ivd;
     return new Matrix4(dest);
   }
+
+  getArray(): Float32Array {
+    return new Float32Array(this.matrix);
+  }
 }
 
 export { Matrix4 };
