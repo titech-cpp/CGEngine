@@ -44,12 +44,16 @@ class Transform {
     return this;
   }
 
-  update(): Matrix4 {
-    if (
+  needUpdate(): boolean {
+    return !(
       this.position.equal(this.prevPos)
       && this.rotation.equal(this.prevRot)
       && this.scale.equal(this.prevSca)
-    ) return this.matrix;
+    );
+  }
+
+  getMatrix(): Matrix4 {
+    if (this.needUpdate()) return this.matrix;
     const p = new Matrix4([
       1, 0, 0, 0,
       0, 1, 0, 0,
