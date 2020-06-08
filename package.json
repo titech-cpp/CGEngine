@@ -4,9 +4,9 @@
   "description": "This is the 3DCG engine with WebGL",
   "main": "src/main.ts",
   "scripts": {
-    "build": "tsc ./src/main.ts --outDir ./buid/",
+    "build": "tsc ./src/main.ts --outDir ./build/",
     "lint": "eslint ./src/main.ts",
-    "test": "parcel ./index.html --public-url ./dist/"
+    "test": "parcel ./index.html"
   },
   "author": "Fogrex",
   "license": "MIT",
