@@ -36,6 +36,7 @@ class Entity {
     this.material.uniform.mMatrix = thisMat;
     this.material.uniform.vpMatrix = vpMatrix;
 
+    gl.useProgram(this.program);
     this.material.setUniforms(gl);
     this.geometry.attachAttribute(gl);
     gl.drawElements(gl.TRIANGLES, this.geometry.getIndexLength(), gl.UNSIGNED_SHORT, 0);

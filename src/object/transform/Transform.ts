@@ -53,7 +53,7 @@ class Transform {
   }
 
   getMatrix(): Matrix4 {
-    if (this.needUpdate()) return this.matrix;
+    if (!this.needUpdate()) return this.matrix;
     const p = new Matrix4([
       1, 0, 0, 0,
       0, 1, 0, 0,

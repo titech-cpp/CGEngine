@@ -17,6 +17,8 @@ class Renderer {
 
   private gl : WebGLRenderingContext;
 
+  entities: Entity | null = null;
+
   constructor(_parameter: RendererParameter) {
     this.parameter = _parameter;
     this.canvas = this.parameter.canvas;
@@ -25,7 +27,13 @@ class Renderer {
     this.parameter.clearDepth = this.parameter.clearDepth || 1.0;
   }
 
-  render(camera: CameraType, object: Entity) {
+  addEntities(entity: Entity) {
+    entity.initialize(this.gl);
+    this.entities = entity;
+  }
+
+  render(camera: CameraType) {
+    console.assert(!!this.entities, 'Entities are not initialized');
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
 
@@ -35,7 +43,7 @@ class Renderer {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
     const vpMatrix: Matrix4 = camera.getMatrix();
-    object.render(this.gl, new Matrix4(), vpMatrix);
+    (<Entity>this.entities).render(this.gl, new Matrix4(), vpMatrix);
   }
 }
 

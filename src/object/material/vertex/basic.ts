@@ -13,7 +13,7 @@ const basicVertex: string = `
   void main(void)
   {
     vWorldPos = (mMatrix * vec4(vertex, 1.0)).xyz;
-    vNormal = normal;
+    vNormal = (mMatrix * vec4(normal, 1.0)).xyz;
     vUv = uv;
     gl_Position = vpMatrix * vec4(vWorldPos, 1.0);
   }
