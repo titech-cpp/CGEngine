@@ -1,19 +1,26 @@
 {
   "name": "webglwrapper",
-  "version": "0.1.0tsc",
+  "version": "0.3.0",
   "description": "This is the 3DCG engine with WebGL",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint src/main.ts"
+    "build": "tsc ./src/main.ts --outDir ./build/",
+    "lint": "eslint ./src/main.ts",
+    "test": "parcel ./index.html"
   },
   "author": "Fogrex",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.0.0"
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "parcel": "^1.12.4",
+    "typescript": "^3.9.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fogrexon/CGEngine.git"
+    "url": "https://github.com/titech-cpp/CGEngine.git"
   }
 }
