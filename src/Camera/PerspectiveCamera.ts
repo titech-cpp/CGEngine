@@ -26,16 +26,16 @@ class PerspectiveCamera {
   }
 
   updateProjectionMatrix(): void {
-    const scaleX: number = 1 / Math.tan(this.angle / 2);
-    const scaleY: number = 1 / Math.tan(this.angle / 2) / this.aspect;
-    const scaleZ: number = this.far / (this.far - this.near);
-    const transZ: number = -(this.near * this.far) / (this.far - this.near);
+    const scaleX: number = 1 / Math.tan(this.angle / 2) / this.aspect;
+    const scaleY: number = 1 / Math.tan(this.angle / 2);
+    const scaleZ: number = (this.near + this.far) / (this.near - this.far);
+    const transZ: number = (2 * this.near * this.far) / (this.near - this.far);
 
     this.projectionMatrix.set([
       scaleX, 0, 0, 0,
       0, scaleY, 0, 0,
-      0, 0, scaleZ, transZ,
-      0, 0, 1, 0,
+      0, 0, scaleZ, -1,
+      0, 0, transZ, 0,
     ]);
   }
 

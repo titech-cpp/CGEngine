@@ -29,7 +29,7 @@ class Quartanion {
     return this;
   }
 
-  eulerAngle(rot: Vector3): Quartanion {
+  eularAngle(rot: Vector3): Quartanion {
     const { x, y, z } = rot;
     const xc = Math.cos(x);
     const xs = Math.sin(x);
@@ -38,7 +38,7 @@ class Quartanion {
     const zc = Math.cos(z);
     const zs = Math.sin(z);
     this.v = new Vector3(
-      xc * yc * xc + xs * ys * zs,
+      xc * yc * zc + xs * ys * zs,
       xs * yc * zc - xc * ys * zs,
       xc * ys * zc + xs * yc * zs,
     );
@@ -61,11 +61,9 @@ class Quartanion {
     const m00: number = mat.matrix[0];
     const m10: number = mat.matrix[1];
     const m20: number = mat.matrix[2];
-    const m30: number = mat.matrix[3];
     const m01: number = mat.matrix[4];
     const m11: number = mat.matrix[5];
     const m21: number = mat.matrix[6];
-    const m31: number = mat.matrix[7];
     const m02: number = mat.matrix[8];
     const m12: number = mat.matrix[9];
     const m22: number = mat.matrix[10];
@@ -123,11 +121,12 @@ class Quartanion {
       }
     }
 
-    this.v = new Vector3(q[0], q[1], q[2]);
-    // eslint-disable-next-line prefer-destructuring
-    this.w = q[3];
+    return new Quartanion(new Vector3(q[0], q[1], q[2]), q[3]).normalize();
+  }
 
-    return this;
+  normalize(): Quartanion {
+    const len = Math.sqrt(this.v.x ** 2 + this.v.y ** 2 + this.v.z ** 2 + this.w ** 2);
+    return new Quartanion(new Vector3(this.v.x / len, this.v.y / len, this.v.z / len), this.w / len);
   }
 
   // 計算

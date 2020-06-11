@@ -28,18 +28,18 @@ class Transform {
   }
 
   lookAt(target: Vector3): Transform {
-    const z: Vector3 = target.subtract(this.position).normalize();
-    const x: Vector3 = new Vector3(0, 1, 0).cross(z).normalize();
+    let z: Vector3 = this.position.subtract(target).normalize();
+    const x: Vector3 = (new Vector3(0, 1, 0)).cross(z).normalize();
     const y: Vector3 = z.cross(x).normalize();
 
     const mat4: Matrix4 = new Matrix4([
-      x.x, y.x, z.x, 0,
-      x.y, y.y, z.y, 0,
-      x.z, y.z, z.z, 0,
+      x.x, x.y, x.z, 0,
+      y.x, y.y, y.z, 0,
+      z.x, z.y, z.z, 0,
       0, 0, 0, 1,
     ]);
 
-    this.rotation.fromMatrix(mat4);
+    this.rotation = this.rotation.fromMatrix(mat4);
 
     return this;
   }

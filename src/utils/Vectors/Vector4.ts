@@ -59,8 +59,10 @@ class Vector4 {
 
   public divide(a: Vector4 | number): Vector4 {
     if (a instanceof Vector4) {
+      console.assert(!(a.x === 0 || a.y === 0 || a.z === 0 || a.w === 0), 'cannot divide by zero');
       return new Vector4(this.x / a.x, this.y / a.y, this.z / a.z, this.w / a.w);
     }
+    console.assert(a !== 0, 'cannot divide by zero');
     return new Vector4(this.x / a, this.y / a, this.z / a, this.w / a);
   }
 
