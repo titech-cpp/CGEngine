@@ -4,9 +4,10 @@ import { Transform } from './transform/Transform';
 import { Matrix4 } from '../utils/Matrix';
 
 class Entity {
-  geometry: Geometry;
+  geometry: Geometry | undefined;
 
-  material: Material;
+  material: Material | undefined;
+  isEmpty: boolean = false;
 
   transform: Transform;
 
@@ -14,7 +15,10 @@ class Entity {
 
   children: Entity[] = [];
 
-  constructor(geometry: Geometry, material: Material) {
+  constructor(geometry?: Geometry, material?: Material) {
+    if(!geometry || !material){
+      this.isEmpty = true;
+    }
     this.geometry = geometry;
     this.material = material;
     this.transform = new Transform();
@@ -23,9 +27,11 @@ class Entity {
   initialize(
     gl: WebGLRenderingContext,
   ): void {
-    this.program = <WebGLProgram>gl.createProgram();
-    this.material.initialize(gl, this.program);
-    this.geometry.setupAttribute(gl, this.program);
+    if(!this.isEmpty){
+      this.program = <WebGLProgram>gl.createProgram();
+      (<Material>this.material).initialize(gl, this.program);
+      (<Geometry>this.geometry).setupAttribute(gl, this.program);
+    }
     this.children.map((child) => child.initialize(gl));
   }
 
@@ -33,14 +39,16 @@ class Entity {
     const thisMat: Matrix4 = <Matrix4>parentMat.multiply(
       this.transform.getMatrix(),
     );
-    this.material.uniform.mMatrix = thisMat;
-    this.material.uniform.vpMatrix = vpMatrix;
 
-    gl.useProgram(this.program);
-    this.material.setUniforms(gl);
-    this.geometry.attachAttribute(gl);
-    gl.drawElements(gl.TRIANGLES, this.geometry.getIndexLength(), gl.UNSIGNED_SHORT, 0);
+    if(!this.isEmpty){
+      (<Material>this.material).uniform.mMatrix = thisMat;
+      (<Material>this.material).uniform.vpMatrix = vpMatrix;
 
+      gl.useProgram(this.program);
+      (<Material>this.material).setUniforms(gl);
+      (<Geometry>this.geometry).attachAttribute(gl);
+      gl.drawElements(gl.TRIANGLES, (<Geometry>this.geometry).getIndexLength(), gl.UNSIGNED_SHORT, 0);
+    }
     this.children.map((child) => child.render(gl, thisMat, vpMatrix));
   }
 }

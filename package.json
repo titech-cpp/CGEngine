@@ -1,5 +1,5 @@
 {
-  "name": "webglwrapper",
+  "name": "cgengine",
   "version": "0.3.0",
   "description": "This is the 3DCG engine with WebGL",
   "main": "src/main.ts",
