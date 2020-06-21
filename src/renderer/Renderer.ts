@@ -42,8 +42,8 @@ class Renderer {
     this.gl.clearDepth(<number> this.parameter.clearDepth);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
-    const vpMatrix: Matrix4 = camera.getMatrix();
-    (<Entity>this.entities).render(this.gl, new Matrix4(), vpMatrix);
+    const option: {vMatrix: Matrix4, pMatrix: Matrix4} = camera.getMatrix();
+    (<Entity>this.entities).render(this.gl, new Matrix4(), option);
   }
 }
 

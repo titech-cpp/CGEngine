@@ -35,21 +35,22 @@ class Entity {
     this.children.map((child) => child.initialize(gl));
   }
 
-  render(gl: WebGLRenderingContext, parentMat: Matrix4, vpMatrix: Matrix4): void {
+  render(gl: WebGLRenderingContext, parentMat: Matrix4, option: any): void {
     const thisMat: Matrix4 = <Matrix4>parentMat.multiply(
       this.transform.getMatrix(),
     );
 
     if(!this.isEmpty){
       (<Material>this.material).uniform.mMatrix = thisMat;
-      (<Material>this.material).uniform.vpMatrix = vpMatrix;
+      (<Material>this.material).uniform.vMatrix = option.vMatrix;
+      (<Material>this.material).uniform.pMatrix = option.pMatrix;
 
       gl.useProgram(this.program);
       (<Material>this.material).setUniforms(gl);
       (<Geometry>this.geometry).attachAttribute(gl);
       gl.drawElements(gl.TRIANGLES, (<Geometry>this.geometry).getIndexLength(), gl.UNSIGNED_SHORT, 0);
     }
-    this.children.map((child) => child.render(gl, thisMat, vpMatrix));
+    this.children.map((child) => child.render(gl, thisMat, option));
   }
 }
 

@@ -39,11 +39,14 @@ class PerspectiveCamera {
     ]);
   }
 
-  getMatrix(): Matrix4 {
+  getMatrix(): {vMatrix: Matrix4, pMatrix: Matrix4} {
     this.viewMatrix = this.transform.needUpdate()
       ? this.transform.getMatrix().inverse()
       : this.viewMatrix;
-    return <Matrix4> this.projectionMatrix.multiply(this.viewMatrix);
+    return {
+      vMatrix: this.viewMatrix,
+      pMatrix: this.projectionMatrix,
+    };
   }
 }
 

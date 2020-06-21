@@ -76,7 +76,8 @@ class Material {
 
     this.uniform = {
       mMatrix: null,
-      vpMatrix: null,
+      vMatrix: null,
+      pMatrix: null,
       ...this.uniform,
     };
 
