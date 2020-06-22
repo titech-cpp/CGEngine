@@ -1,7 +1,7 @@
 import { Vector2, Vector3, Vector4 } from '../../utils/Vector';
 import { Matrix4 } from '../../utils/Matrix';
-
-type UniformType = number | Vector2 | Vector3 | Vector4 | Matrix4 | null;
+import { UniformSwitcher, UniformType } from '../../utils/UniformSwitcher'
+import { GLStruct } from '../../utils/GLStruct';
 
 const compileShader = (
   gl: WebGLRenderingContext,
@@ -12,28 +12,6 @@ const compileShader = (
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     throw new Error(<string>gl.getShaderInfoLog(shader));
-  }
-};
-
-const uniformSwitcher = (
-  gl: WebGLRenderingContext,
-  uniLocation: WebGLUniformLocation,
-  data: UniformType,
-): void => {
-  if (data instanceof Vector2) {
-    gl.uniform2fv(uniLocation, data.getArray());
-  } else if (data instanceof Vector3) {
-    gl.uniform3fv(uniLocation, data.getArray());
-  } else if (data instanceof Vector4) {
-    gl.uniform4fv(uniLocation, data.getArray());
-  } else if (data instanceof Matrix4) {
-    gl.uniformMatrix4fv(uniLocation, false, data.getArray());
-  } else if (typeof data === 'number') {
-    if (data % 1.0 === 0.0) {
-      gl.uniform1i(uniLocation, data);
-    } else {
-      gl.uniform1f(uniLocation, data);
-    }
   }
 };
 
@@ -82,10 +60,17 @@ class Material {
     };
 
     Object.entries(this.uniform).map((value) => {
-      this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
-        program,
-        value[0],
-      );
+      if (value[1] instanceof GLStruct) {
+        (<GLStruct>value[1]).createUniforms(gl, program, value[0]);
+      // } else if (value[1] instanceof GLArray) {
+      //   (<GLArray>value[1]).createUniform(gl, program, value[0]);
+      } else {
+        this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
+          program,
+          value[0],
+        );
+      }
+      
       return true;
     });
   }
@@ -94,7 +79,7 @@ class Material {
     gl: WebGLRenderingContext,
   ): void {
     Object.entries(this.uniformLocations)
-      .map((value) => uniformSwitcher(gl, value[1], this.uniform[value[0]]));
+      .map((value) => UniformSwitcher(gl, value[1], this.uniform[value[0]]));
   }
 }
 
