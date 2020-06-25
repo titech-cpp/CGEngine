@@ -18,6 +18,7 @@ struct GeneralLight {
  */
 struct Light {
   vec3 pos;
+  vec3 dir;
   int type;
   float power;
   float coneArg;
@@ -46,3 +47,4 @@ void main(void)
   gl_FragColor = mainColor;
 }
 `;
+export { phong };

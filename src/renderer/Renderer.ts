@@ -1,7 +1,9 @@
 import { Color } from '../utils/Color';
-import { CameraType } from '../Camera/Camera';
+import { CameraType } from '../camera/Camera';
 import { Entity } from '../object/Entity';
 import { Matrix4 } from '../utils/Matrix';
+import { GLStruct } from '../utils/GLStruct';
+import { GLArray } from '../utils/GLArray';
 
 interface RendererParameter
 {
@@ -42,8 +44,17 @@ class Renderer {
     this.gl.clearDepth(<number> this.parameter.clearDepth);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
-    const option: {vMatrix: Matrix4, pMatrix: Matrix4} = camera.getMatrix();
-    (<Entity>this.entities).render(this.gl, new Matrix4(), option);
+    if (!this.entities) return;
+    const lightList: GLStruct[] = [];
+    this.entities.prepare(new Matrix4(), lightList);
+    const option: {
+      vMatrix: Matrix4,
+      pMatrix: Matrix4,
+      lights: GLArray | null,
+      lightNum: number,
+    } = { lights: null, lightNum: 0, ...camera.getMatrix() };
+
+    this.entities.render(this.gl, option);
   }
 }
 
