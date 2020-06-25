@@ -1,7 +1,8 @@
 import { Vector2, Vector3, Vector4 } from '../../utils/Vector';
 import { Matrix4 } from '../../utils/Matrix';
-import { UniformSwitcher, UniformType } from '../../utils/UniformSwitcher'
+import { UniformSwitcher, UniformType } from '../../utils/UniformSwitcher';
 import { GLStruct } from '../../utils/GLStruct';
+import { GLArray } from '../../utils/GLArray';
 
 const compileShader = (
   gl: WebGLRenderingContext,
@@ -26,7 +27,7 @@ class Material {
 
   private fragmentShader: WebGLShader | null = null;
 
-  private uniformLocations: {[s: string]: WebGLUniformLocation} = {};
+  private uniformLocations: {[s: string]: WebGLUniformLocation | null} = {};
 
   constructor(vertex: string, fragment: string, uniform: {}) {
     this.vertexSource = vertex;
@@ -60,17 +61,16 @@ class Material {
     };
 
     Object.entries(this.uniform).map((value) => {
-      if (value[1] instanceof GLStruct) {
-        (<GLStruct>value[1]).createUniforms(gl, program, value[0]);
-      // } else if (value[1] instanceof GLArray) {
-      //   (<GLArray>value[1]).createUniform(gl, program, value[0]);
+      if (value[1] instanceof GLStruct || value[1] instanceof GLArray) {
+        this.uniformLocations[value[0]] = null;
+        value[1].createUniforms(gl, program, value[0]);
       } else {
         this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
           program,
           value[0],
         );
       }
-      
+
       return true;
     });
   }
