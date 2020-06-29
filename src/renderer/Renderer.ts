@@ -2,8 +2,8 @@ import { Color } from '../utils/Color';
 import { CameraType } from '../camera/Camera';
 import { Entity } from '../object/Entity';
 import { Matrix4 } from '../utils/Matrix';
-import { GLStruct } from '../utils/GLStruct';
 import { GLArray } from '../utils/GLArray';
+import { LightsUniform } from '../light/Primitives';
 
 interface RendererParameter
 {
@@ -45,7 +45,9 @@ class Renderer {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
     if (!this.entities) return;
-    const lightList: GLStruct[] = [];
+    const lightList: LightsUniform = {
+      directional: [],
+    };
     this.entities.prepare(new Matrix4(), lightList);
     const option: {
       vMatrix: Matrix4,

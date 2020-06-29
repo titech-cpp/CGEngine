@@ -1,6 +1,6 @@
 import { Transform } from './transform/Transform';
 import { Matrix4 } from '../utils/Matrix';
-import { GLStruct } from '../utils/GLStruct';
+import { LightsUniform } from '../light/Primitives';
 
 class Empty {
   transform: Transform = new Transform();
@@ -19,7 +19,7 @@ class Empty {
     this.children.map((child) => child.initialize(gl));
   }
 
-  prepare(parentMat: Matrix4, lightList: GLStruct[]): void {
+  prepare(parentMat: Matrix4, lightList: LightsUniform): void {
     this.thisMat = <Matrix4>parentMat.multiply(
       this.transform.getMatrix(),
     );
