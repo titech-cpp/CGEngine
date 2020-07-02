@@ -8,11 +8,15 @@ class Color {
 
   public a: number;
 
-  constructor(_r: number, _g: number, _b: number, _a: number | undefined) {
+  constructor(_r: number, _g: number, _b: number, _a?: number) {
     this.r = _r;
     this.g = _g;
     this.b = _b;
-    this.a = <number>(_a || 1.0);
+    this.a = _a || 1.0;
+  }
+
+  getArray(): Float32Array {
+    return new Float32Array([this.r, this.g, this.b, this.a]);
   }
 }
 

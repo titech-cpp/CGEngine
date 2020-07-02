@@ -1,5 +1,6 @@
 import { Transform } from '../object/transform/Transform';
 import { Matrix4 } from '../utils/Matrix';
+import { Vector3 } from '../utils/Vector';
 
 class PerspectiveCamera {
   transform: Transform;
@@ -39,11 +40,15 @@ class PerspectiveCamera {
     ]);
   }
 
-  getMatrix(): Matrix4 {
+  getMatrix(): {vMatrix: Matrix4, pMatrix: Matrix4, uCameraPos: Vector3} {
     this.viewMatrix = this.transform.needUpdate()
       ? this.transform.getMatrix().inverse()
       : this.viewMatrix;
-    return <Matrix4> this.projectionMatrix.multiply(this.viewMatrix);
+    return {
+      vMatrix: this.viewMatrix,
+      pMatrix: this.projectionMatrix,
+      uCameraPos: this.transform.position,
+    };
   }
 }
 
