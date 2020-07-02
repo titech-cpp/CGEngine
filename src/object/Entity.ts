@@ -1,6 +1,7 @@
 import { Empty } from './Empty';
 import { Geometry } from './geometry/Geometry';
 import { Material } from './material/Material';
+import { UniformType } from '../utils/UniformSwitcher';
 
 class Entity extends Empty {
   geometry: Geometry;
@@ -17,19 +18,21 @@ class Entity extends Empty {
 
   initialize(
     gl: WebGLRenderingContext,
+    defaultUniforms: {[key: string]: UniformType},
   ): void {
     this.program = <WebGLProgram>gl.createProgram();
-    (<Material> this.material).initialize(gl, this.program);
+    (<Material> this.material).initialize(gl, this.program, defaultUniforms);
     (<Geometry> this.geometry).setupAttribute(gl, this.program);
-    super.initialize(gl);
+    super.initialize(gl, defaultUniforms);
   }
 
   render(gl: WebGLRenderingContext, option: any): void {
     this.material.uniform.mMatrix = this.thisMat;
-    this.material.uniform.vMatrix = option.vMatrix;
-    this.material.uniform.pMatrix = option.pMatrix;
-    this.material.uniform.lights = option.lights;
-    this.material.uniform.lightNum = option.lightNum;
+    this.material.uniform = {
+      ...this.material.uniform,
+      ...option.uniforms,
+    };
+
 
     gl.useProgram(this.program);
     this.material.setUniforms(gl);

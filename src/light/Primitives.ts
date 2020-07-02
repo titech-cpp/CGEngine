@@ -1,6 +1,10 @@
 import { Directional } from './lights/Directional';
-import { GLStruct } from '../utils/GLStruct';
+import { Vector3 } from '../utils/Vector';
+import { Color } from '../utils/Color';
 
-type LightsUniform = {directional: GLStruct[]};
+type LightsUniform = {
+  uDirectionalLight: {dir: Vector3, color: Color}[],
+  uDirectionalNum: number,
+};
 
 export { Directional, LightsUniform };

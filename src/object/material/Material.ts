@@ -1,8 +1,4 @@
-import { Vector2, Vector3, Vector4 } from '../../utils/Vector';
-import { Matrix4 } from '../../utils/Matrix';
 import { UniformSwitcher, UniformType } from '../../utils/UniformSwitcher';
-import { GLStruct } from '../../utils/GLStruct';
-import { GLArray } from '../../utils/GLArray';
 
 const compileShader = (
   gl: WebGLRenderingContext,
@@ -38,6 +34,7 @@ class Material {
   initialize(
     gl: WebGLRenderingContext,
     program: WebGLProgram,
+    defaultUniform: any,
   ) {
     this.vertexShader = gl.createShader(gl.VERTEX_SHADER);
     this.fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -50,27 +47,19 @@ class Material {
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error('Cannot link program');
+      throw new Error(<string>gl.getProgramInfoLog(program));
     }
 
     this.uniform = {
-      mMatrix: null,
-      vMatrix: null,
-      pMatrix: null,
       ...this.uniform,
+      ...defaultUniform,
     };
 
     Object.entries(this.uniform).map((value) => {
-      if (value[1] instanceof GLStruct || value[1] instanceof GLArray) {
-        this.uniformLocations[value[0]] = null;
-        value[1].createUniforms(gl, program, value[0]);
-      } else {
-        this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
-          program,
-          value[0],
-        );
-      }
-
+      this.uniformLocations[value[0]] = <WebGLUniformLocation>gl.getUniformLocation(
+        program,
+        value[0],
+      );
       return true;
     });
   }

@@ -1,6 +1,7 @@
 import { Transform } from './transform/Transform';
 import { Matrix4 } from '../utils/Matrix';
 import { LightsUniform } from '../light/Primitives';
+import { UniformType } from '../utils/UniformSwitcher';
 
 class Empty {
   transform: Transform = new Transform();
@@ -13,10 +14,17 @@ class Empty {
     this.children = [];
   }
 
+  searchLight(
+    list: LightsUniform,
+  ): void {
+    this.children.map((child) => child.searchLight(list));
+  }
+
   initialize(
     gl: WebGLRenderingContext,
+    defaultUniforms: {[key: string]: UniformType},
   ): void {
-    this.children.map((child) => child.initialize(gl));
+    this.children.map((child) => child.initialize(gl, defaultUniforms));
   }
 
   prepare(parentMat: Matrix4, lightList: LightsUniform): void {

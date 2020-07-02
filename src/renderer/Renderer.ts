@@ -2,8 +2,10 @@ import { Color } from '../utils/Color';
 import { CameraType } from '../camera/Camera';
 import { Entity } from '../object/Entity';
 import { Matrix4 } from '../utils/Matrix';
-import { GLArray } from '../utils/GLArray';
+import { ObjectToGLStructure } from '../utils/ObjectToGLStructure';
 import { LightsUniform } from '../light/Primitives';
+import { Empty } from '../object/Empty';
+import { UniformType } from '../utils/UniformSwitcher';
 
 interface RendererParameter
 {
@@ -12,6 +14,13 @@ interface RendererParameter
   clearDepth : number | undefined;
 }
 
+const LightsUniformFormatter = (_lights: LightsUniform) => {
+  const lights = _lights;
+  lights.uDirectionalNum = lights.uDirectionalLight.length;
+
+  return ObjectToGLStructure(lights);
+};
+
 class Renderer {
   private parameter : RendererParameter;
 
@@ -19,7 +28,7 @@ class Renderer {
 
   private gl : WebGLRenderingContext;
 
-  entities: Entity | null = null;
+  entities: Empty | null = null;
 
   constructor(_parameter: RendererParameter) {
     this.parameter = _parameter;
@@ -29,9 +38,23 @@ class Renderer {
     this.parameter.clearDepth = this.parameter.clearDepth || 1.0;
   }
 
-  addEntities(entity: Entity) {
-    entity.initialize(this.gl);
+  addEntities(entity: Empty) {
+    const lightsList: LightsUniform = {
+      uDirectionalLight: [],
+      uDirectionalNum: 0,
+    };
     this.entities = entity;
+    this.entities.searchLight(lightsList);
+
+    const lightsUniform = LightsUniformFormatter(lightsList);
+
+    const defaultUniform = {
+      mMatrix: null,
+      vMatrix: null,
+      pMatrix: null,
+      ...lightsUniform,
+    };
+    this.entities.initialize(this.gl, defaultUniform);
   }
 
   render(camera: CameraType) {
@@ -45,16 +68,22 @@ class Renderer {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
     if (!this.entities) return;
-    const lightList: LightsUniform = {
-      directional: [],
+    const lightsList: LightsUniform = {
+      uDirectionalLight: [],
+      uDirectionalNum: 0,
     };
-    this.entities.prepare(new Matrix4(), lightList);
+    this.entities.prepare(new Matrix4(), lightsList);
+
+    const lightsUniform: {[key: string]: UniformType} = LightsUniformFormatter(lightsList);
+
     const option: {
-      vMatrix: Matrix4,
-      pMatrix: Matrix4,
-      lights: GLArray | null,
-      lightNum: number,
-    } = { lights: null, lightNum: 0, ...camera.getMatrix() };
+      uniforms: {[key: string]: UniformType}
+    } = {
+      uniforms: {
+        ...lightsUniform,
+        ...camera.getMatrix(),
+      },
+    };
 
     this.entities.render(this.gl, option);
   }
