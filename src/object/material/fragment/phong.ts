@@ -1,50 +1,42 @@
-const phong = `
+const phongFragment: string = `
 precision mediump float;
 
-uniform vec4 mainColor;
-uniform vec3 cameraPos;
+#define saturate(x) clamp(x,0.0,1.0)
+#define LIGHT_MAX 10
 
-struct GeneralLight {
-  vec3 direction;
-  vec4 color;
-}
-
-/*
- * type
- * 0: directional
- * 1: point
- * 2: spot
- * 3: area
- */
-struct Light {
-  vec3 pos;
+struct DirectionalLight {
   vec3 dir;
-  int type;
-  float power;
-  float coneArg;
-}
+  vec4 color;
+};
 
-uniform Light lights[10];
-uniform int lightNum;
+uniform vec4 mainColor;
 
-GeneralLight generalLights[10];
+uniform vec3 uCameraPos;
+uniform DirectionalLight uDirectionalLight[LIGHT_MAX];
+uniform int uDirectionalNum;
 
-void DirectionalLightNormalize(in Light light, out GeneralLight generalLight) {
-  generalLight.direction = -normalize(light.pos);
-  generalLight.color = light.color;
-}
+varying vec3 vWorldPos;
+varying vec3 vNormal;
+varying vec2 vUv;
 
-void lightNormalize() {
-  for (int i = 0; i < lightNum; i += 1) {
-    if(lights[0].type == 0) {
-      DirectionalLightNormalize(lights[i], generalLights[i])
-    }
+
+void directionalLight(inout vec4 color, in vec3 eye) {
+  for (int i=0;i<LIGHT_MAX;i++) {
+    if (i >= uDirectionalNum) break;
+    color += (saturate(dot(uDirectionalLight[i].dir, vNormal)) + pow(saturate(dot(vNormal, normalize(uDirectionalLight[i].dir - eye))), 50.0)) * uDirectionalLight[i].color;
   }
 }
 
 void main(void)
 {
-  gl_FragColor = mainColor;
+
+  vec3 viewDir = normalize(vWorldPos - uCameraPos);
+
+  vec4 result = vec4(0.0, 0.0, 0.0, 0.0);
+  directionalLight(result, viewDir);
+  result = saturate(result * mainColor);
+  result.a = mainColor.a;
+  gl_FragColor = result;
 }
 `;
-export { phong };
+export { phongFragment };

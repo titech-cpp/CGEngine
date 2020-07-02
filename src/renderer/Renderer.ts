@@ -52,6 +52,7 @@ class Renderer {
       mMatrix: null,
       vMatrix: null,
       pMatrix: null,
+      uCameraPos: null,
       ...lightsUniform,
     };
     this.entities.initialize(this.gl, defaultUniform);
@@ -61,6 +62,7 @@ class Renderer {
     console.assert(!!this.entities, 'Entities are not initialized');
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
+    this.gl.enable(this.gl.CULL_FACE);
 
     const clearColor: Color = <Color> this.parameter.clearColor;
     this.gl.clearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
