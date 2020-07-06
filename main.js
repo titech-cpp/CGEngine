@@ -11,12 +11,12 @@ window.addEventListener('load', () => {
 
   const camera = new CGEngine.PerspectiveCamera(Math.PI * 0.5, 1, 0.01, 1000);
 
-  camera.transform.position.z = 0;
+  camera.transform.position.z = 1;
   camera.transform.position.y = 0;
   camera.transform.lookAt(new CGEngine.Vector3(1, 0, 0));
 
   const entity = new CGEngine.Entity(
-    CGEngine.GeometryPrimitives.Plane(),
+    CGEngine.GeometryPrimitives.Cube(),
     new CGEngine.Material(
       CGEngine.ShaderPrimitives.basicVertex,
       CGEngine.ShaderPrimitives.phongFragment,
@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
 
 
   const entity2 = new CGEngine.Entity(
-    CGEngine.GeometryPrimitives.Plane(),
+    CGEngine.GeometryPrimitives.Torus(0.2, 50, 50),
     new CGEngine.Material(
       CGEngine.ShaderPrimitives.basicVertex,
       CGEngine.ShaderPrimitives.phongFragment,
@@ -45,12 +45,12 @@ window.addEventListener('load', () => {
   entity2.transform.position.z = 1.0;
 
   const entity3 = new CGEngine.Entity(
-    CGEngine.GeometryPrimitives.Plane(),
+    CGEngine.GeometryPrimitives.Sphere(50, 50),
     new CGEngine.Material(
       CGEngine.ShaderPrimitives.basicVertex,
       CGEngine.ShaderPrimitives.phongFragment,
       {
-        mainColor: new CGEngine.Vector4(0, 0, 1, 1),
+        mainColor: new CGEngine.Vector4(1, 1, 1, 1),
       },
     ),
   );
@@ -76,12 +76,12 @@ window.addEventListener('load', () => {
     ),
   );
 
-  floor.transform.position.y = -1.5;
+  floor.transform.position.y = -3.0;
   floor.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.25));
   floor.transform.scale = new CGEngine.Vector3(1.0, 1.0, 1.0).multiply(10);
 
   const light = new CGEngine.LightPrimitives.Directional(new CGEngine.Color(1, 1, 1, 1));
-  light.transform.rotation.eularAngle(new CGEngine.Vector3(Math.PI * 0.15, 0, Math.PI * 0.15));
+  light.transform.rotation.eularAngle(new CGEngine.Vector3(Math.PI * 0.15, 0, -Math.PI * 0.15));
 
   const root = new CGEngine.Empty();
   root.children.push(floor);
@@ -95,7 +95,7 @@ window.addEventListener('load', () => {
   function tick() {
     count += 1;
     parent.transform.rotation.eularAngle(
-      new CGEngine.Vector3((count / 10) * 0.3, (count / 10) * 0.17, (count / 10) * 0.23),
+      new CGEngine.Vector3((count / 100) * 0.3, (count / 100) * 0.17, (count / 100) * 0.23),
     );
     camera.transform.position = new CGEngine.Vector3(
       Math.cos(count / 100) * 5,
