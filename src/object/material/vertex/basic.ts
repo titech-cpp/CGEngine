@@ -14,7 +14,7 @@ varying vec2 vUv;
 
 void main(void) {
   vWorldPos = (mMatrix * vec4(vertex, 1.0)).xyz;
-  vNormal = normalize((mMatrix * vec4(normal, 1.0)).xyz);
+  vNormal = normalize((mMatrix * vec4(vertex + normal, 1.0)).xyz - vWorldPos);
   vUv = uv;
   gl_Position = pMatrix * vMatrix * vec4(vWorldPos, 1.0);
 }

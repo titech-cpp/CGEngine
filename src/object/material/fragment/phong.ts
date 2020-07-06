@@ -23,7 +23,7 @@ varying vec2 vUv;
 void directionalLight(inout vec4 color, in vec3 eye) {
   for (int i=0;i<LIGHT_MAX;i++) {
     if (i >= uDirectionalNum) break;
-    color += (saturate(dot(uDirectionalLight[i].dir, vNormal)) + pow(saturate(dot(vNormal, normalize(uDirectionalLight[i].dir - eye))), 50.0)) * uDirectionalLight[i].color;
+    color += (saturate(dot(normalize(uDirectionalLight[i].dir), vNormal)) + pow(saturate(dot(vNormal, normalize(uDirectionalLight[i].dir - eye))), 50.0)) * uDirectionalLight[i].color;
   }
 }
 
