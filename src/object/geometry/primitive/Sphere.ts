@@ -7,8 +7,8 @@ const Sphere = (_row?: number, _column?: number): Geometry => {
   const normal: number[] = [];
   const uv: number[] = [];
   const index: number[] = [];
-  for (let theta: number = 0; theta <= Math.PI + 0.001; theta += (Math.PI) / column) {
-    for (let phi: number = 0; phi < Math.PI * 2; phi += (Math.PI * 2) / row) {
+  for (let theta: number = 0; theta < Math.PI + 0.001; theta += (Math.PI) / column) {
+    for (let phi: number = 0; phi < Math.PI * 2 + 0.001; phi += (Math.PI * 2) / row) {
       vertex.push(0.5 * Math.sin(theta) * Math.sin(phi));
       vertex.push(0.5 * Math.cos(theta));
       vertex.push(0.5 * Math.sin(theta) * Math.cos(phi));
@@ -21,20 +21,14 @@ const Sphere = (_row?: number, _column?: number): Geometry => {
   }
 
   for (let i = 0; i < column; i += 1) {
-    for (let j = 0; j < row - 1; j += 1) {
-      index.push(i * row + j);
-      index.push((i + 1) * row + j);
-      index.push(i * row + j + 1);
-      index.push(i * row + j + 1);
-      index.push((i + 1) * row + j);
-      index.push((i + 1) * row + j + 1);
+    for (let j = 0; j < row; j += 1) {
+      index.push(i * (row + 1) + j);
+      index.push((i + 1) * (row + 1) + j);
+      index.push(i * (row + 1) + j + 1);
+      index.push(i * (row + 1) + j + 1);
+      index.push((i + 1) * (row + 1) + j);
+      index.push((i + 1) * (row + 1) + j + 1);
     }
-    index.push(i * row + row - 1);
-    index.push((i + 1) * row + row - 1);
-    index.push(i * row + 0);
-    index.push(i * row + 0);
-    index.push((i + 1) * row + row - 1);
-    index.push((i + 1) * row + 0);
   }
 
   return new Geometry(vertex, normal, uv, index);
