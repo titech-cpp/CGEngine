@@ -77,7 +77,6 @@ window.addEventListener('load', () => {
   );
 
   floor.transform.position.y = -3.0;
-  floor.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.25));
   floor.transform.scale = new CGEngine.Vector3(1.0, 1.0, 1.0).multiply(10);
 
   const light = new CGEngine.LightPrimitives.Directional(new CGEngine.Color(1, 1, 1, 1));
