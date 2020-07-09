@@ -6,20 +6,24 @@ import { LightsUniform } from '../Primitives';
 
 import { Color } from '../../utils/Color';
 
-class Directional extends Light {
+class Point extends Light {
   color: Color;
 
-  constructor(color: Color) {
+  decay: number;
+
+  constructor(_color: Color, _decay?: number) {
     super();
-    this.color = color;
+    this.color = _color;
+    this.decay = _decay || 1;
   }
 
   searchLight(lightsList: LightsUniform):void {
-    lightsList.uDirectionalLight.push({
-      dir: new Vector3(0, 1, 0),
-      color: new Color(1, 1, 1),
+    lightsList.uPointLight.push({
+      pos: new Vector3(0, 0, 0),
+      color: this.color,
+      decay: this.decay,
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uPointNum += 1;
     super.searchLight(lightsList);
   }
 
@@ -28,16 +32,18 @@ class Directional extends Light {
       this.transform.getMatrix(),
     );
 
-    const dir: Vector4 = <Vector4> this.thisMat
-      .getScaleRotationMatrix()
-      .multiply(new Vector4(0, -1, 0, 0));
-    lightsList.uDirectionalLight.push({
-      dir: new Vector3(dir.x, dir.y, dir.z).normalize(),
+    lightsList.uPointLight.push({
+      pos: new Vector3(
+        this.thisMat.matrix[12],
+        this.thisMat.matrix[13],
+        this.thisMat.matrix[14],
+      ),
       color: this.color,
+      decay: this.decay,
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uPointNum += 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));
   }
 }
 
-export { Directional };
+export { Point };
