@@ -11,17 +11,21 @@ class Point extends Light {
 
   decay: number;
 
-  constructor(_color: Color, _decay?: number) {
+  distance: number;
+
+  constructor(_color: Color, _distance: number, _decay?: number) {
     super();
     this.color = _color;
-    this.decay = _decay || 1;
+    this.distance = _distance + 0.000001;
+    this.decay = _decay || 1.000001;
   }
 
   searchLight(lightsList: LightsUniform):void {
     lightsList.uPointLight.push({
       pos: new Vector3(0, 0, 0),
       color: this.color,
-      decay: this.decay,
+      distance: this.distance + 0.000001,
+      decay: this.decay + 0.000001,
     });
     lightsList.uPointNum += 1;
     super.searchLight(lightsList);
@@ -39,7 +43,8 @@ class Point extends Light {
         this.thisMat.matrix[14],
       ),
       color: this.color,
-      decay: this.decay,
+      distance: this.distance + 0.000001,
+      decay: this.decay + 0.000001,
     });
     lightsList.uPointNum += 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));

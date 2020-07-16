@@ -32,9 +32,7 @@ class Renderer {
   }
 
   addEntities(entity: Empty) {
-    const lightsList: LightsUniform = {
-      ...originalLightsUniform,
-    };
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities = entity;
     this.entities.searchLight(lightsList);
 
@@ -62,9 +60,7 @@ class Renderer {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
     if (!this.entities) return;
-    const lightsList: LightsUniform = {
-      ...originalLightsUniform,
-    };
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities.prepare(new Matrix4(), lightsList);
 
     const lightsUniform: {[key: string]: UniformType} = ObjectToGLStructure(lightsList);

@@ -13,6 +13,7 @@ type LightsUniform = {
   uPointLight: {
     pos: Vector3,
     color: Color,
+    distance: number,
     decay: number,
   }[],
   uPointNum: number,
@@ -21,20 +22,21 @@ type LightsUniform = {
     dir: Vector3,
     color: Color,
     decay: number,
+    distance: number,
     coneCos: number,
     penumbraCos: number,
   }[],
   uSpotNum: number,
 };
 
-const originalLightsUniform: LightsUniform = {
+const originalLightsUniform: string = JSON.stringify({
   uDirectionalLight: [],
   uDirectionalNum: 0,
   uPointLight: [],
   uPointNum: 0,
   uSpotLight: [],
   uSpotNum: 0,
-};
+});
 
 export {
   Directional,
