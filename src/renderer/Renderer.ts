@@ -3,7 +3,7 @@ import { CameraType } from '../camera/Camera';
 import { Entity } from '../object/Entity';
 import { Matrix4 } from '../utils/Matrix';
 import { ObjectToGLStructure } from '../utils/ObjectToGLStructure';
-import { LightsUniform } from '../light/Primitives';
+import { LightsUniform, originalLightsUniform } from '../light/Primitives';
 import { Empty } from '../object/Empty';
 import { UniformType } from '../utils/UniformSwitcher';
 
@@ -13,13 +13,6 @@ interface RendererParameter
   clearColor : Color | undefined;
   clearDepth : number | undefined;
 }
-
-const LightsUniformFormatter = (_lights: LightsUniform) => {
-  const lights = _lights;
-  lights.uDirectionalNum = lights.uDirectionalLight.length;
-
-  return ObjectToGLStructure(lights);
-};
 
 class Renderer {
   private parameter : RendererParameter;
@@ -39,14 +32,11 @@ class Renderer {
   }
 
   addEntities(entity: Empty) {
-    const lightsList: LightsUniform = {
-      uDirectionalLight: [],
-      uDirectionalNum: 0,
-    };
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities = entity;
     this.entities.searchLight(lightsList);
 
-    const lightsUniform = LightsUniformFormatter(lightsList);
+    const lightsUniform = ObjectToGLStructure(lightsList);
 
     const defaultUniform = {
       mMatrix: null,
@@ -70,13 +60,10 @@ class Renderer {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
     if (!this.entities) return;
-    const lightsList: LightsUniform = {
-      uDirectionalLight: [],
-      uDirectionalNum: 0,
-    };
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities.prepare(new Matrix4(), lightsList);
 
-    const lightsUniform: {[key: string]: UniformType} = LightsUniformFormatter(lightsList);
+    const lightsUniform: {[key: string]: UniformType} = ObjectToGLStructure(lightsList);
 
     const option: {
       uniforms: {[key: string]: UniformType}

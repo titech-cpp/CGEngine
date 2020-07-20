@@ -1,12 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { Light } from '../Light';
-import { Vector3, Vector4 } from '../../utils/Vector';
 import { Matrix4 } from '../../utils/Matrix';
 import { LightsUniform } from '../Primitives';
 
 import { Color } from '../../utils/Color';
 
-class Directional extends Light {
+class Ambient extends Light {
   color: Color;
 
   constructor(color: Color) {
@@ -15,11 +14,10 @@ class Directional extends Light {
   }
 
   searchLight(lightsList: LightsUniform):void {
-    lightsList.uDirectionalLight.push({
-      dir: new Vector3(0, 1, 0),
+    lightsList.uAmbientLight.push({
       color: new Color(1, 1, 1),
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uAmbientNum += 1;
     super.searchLight(lightsList);
   }
 
@@ -28,16 +26,12 @@ class Directional extends Light {
       this.transform.getMatrix(),
     );
 
-    const dir: Vector4 = <Vector4> this.thisMat
-      .getScaleRotationMatrix()
-      .multiply(new Vector4(0, -1, 0, 0));
-    lightsList.uDirectionalLight.push({
-      dir: new Vector3(dir.x, dir.y, dir.z).normalize(),
+    lightsList.uAmbientLight.push({
       color: this.color,
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uAmbientNum += 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));
   }
 }
 
-export { Directional };
+export { Ambient };
