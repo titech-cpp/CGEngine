@@ -1,5 +1,8 @@
 export * from './camera/Camera';
+export * from './object/Empty';
 export * from './object/Entity';
+export * from './light/Light';
+export * as LightPrimitives from './light/Primitives';
 export * from './object/geometry/Geometry';
 export * as GeometryPrimitives from './object/geometry/Primitives';
 export * from './object/material/Material';
@@ -10,3 +13,4 @@ export * from './utils/Color';
 export * from './utils/Matrix';
 export * from './utils/Quarternion';
 export * from './utils/Vector';
+export * from './utils/ObjectToGLStructure';

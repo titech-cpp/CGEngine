@@ -76,7 +76,7 @@ class Geometry {
     gl.vertexAttribPointer(this.vertexLocation, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalVBO);
     gl.enableVertexAttribArray(this.normalLocation);
-    gl.vertexAttribPointer(this.normalLocation, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(this.normalLocation, 3, gl.FLOAT, true, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.uvVBO);
     gl.enableVertexAttribArray(this.uvLocation);
     gl.vertexAttribPointer(this.uvLocation, 2, gl.FLOAT, false, 0, 0);

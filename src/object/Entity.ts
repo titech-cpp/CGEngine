@@ -1,47 +1,51 @@
+import { Empty } from './Empty';
 import { Geometry } from './geometry/Geometry';
 import { Material } from './material/Material';
-import { Transform } from './transform/Transform';
-import { Matrix4 } from '../utils/Matrix';
+import { UniformType } from '../utils/UniformSwitcher';
 
-class Entity {
+class Entity extends Empty {
   geometry: Geometry;
 
   material: Material;
 
-  transform: Transform;
-
   program: WebGLProgram | null = null;
 
-  children: Entity[] = [];
-
   constructor(geometry: Geometry, material: Material) {
+    super();
     this.geometry = geometry;
     this.material = material;
-    this.transform = new Transform();
   }
 
   initialize(
     gl: WebGLRenderingContext,
+    defaultUniforms: {[key: string]: UniformType},
   ): void {
     this.program = <WebGLProgram>gl.createProgram();
-    this.material.initialize(gl, this.program);
-    this.geometry.setupAttribute(gl, this.program);
-    this.children.map((child) => child.initialize(gl));
+    (<Material> this.material).initialize(gl, this.program, defaultUniforms);
+    (<Geometry> this.geometry).setupAttribute(gl, this.program);
+    super.initialize(gl, defaultUniforms);
   }
 
-  render(gl: WebGLRenderingContext, parentMat: Matrix4, vpMatrix: Matrix4): void {
-    const thisMat: Matrix4 = <Matrix4>parentMat.multiply(
-      this.transform.getMatrix(),
-    );
-    this.material.uniform.mMatrix = thisMat;
-    this.material.uniform.vpMatrix = vpMatrix;
+  render(gl: WebGLRenderingContext, option: any): void {
+    this.material.uniform.mMatrix = this.thisMat;
+    this.material.uniform = {
+      ...this.material.uniform,
+      ...option.uniforms,
+    };
+
 
     gl.useProgram(this.program);
     this.material.setUniforms(gl);
     this.geometry.attachAttribute(gl);
-    gl.drawElements(gl.TRIANGLES, this.geometry.getIndexLength(), gl.UNSIGNED_SHORT, 0);
 
-    this.children.map((child) => child.render(gl, thisMat, vpMatrix));
+    gl.drawElements(
+      gl.TRIANGLES,
+      this.geometry.getIndexLength(),
+      gl.UNSIGNED_SHORT,
+      0,
+    );
+
+    super.render(gl, option);
   }
 }
 

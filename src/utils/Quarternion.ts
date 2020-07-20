@@ -126,7 +126,10 @@ class Quartanion {
 
   normalize(): Quartanion {
     const len = Math.sqrt(this.v.x ** 2 + this.v.y ** 2 + this.v.z ** 2 + this.w ** 2);
-    return new Quartanion(new Vector3(this.v.x / len, this.v.y / len, this.v.z / len), this.w / len);
+    return new Quartanion(
+      new Vector3(this.v.x / len, this.v.y / len, this.v.z / len),
+      this.w / len,
+    );
   }
 
   // 計算

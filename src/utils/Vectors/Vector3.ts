@@ -48,12 +48,12 @@ class Vector3 {
   }
 
   public divide(a: Vector3 | number): Vector3 {
-    if (a instanceof Vector3){
+    if (a instanceof Vector3) {
       console.assert(!(a.x === 0 || a.y === 0 || a.z === 0), 'cannot divide by zero');
       return new Vector3(this.x / a.x, this.y / a.y, this.z / a.z);
     }
-    
-    console.assert(a !== 0 , 'cannot divide by zero');
+
+    console.assert(a !== 0, 'cannot divide by zero');
     return new Vector3(this.x / a, this.y / a, this.z / a);
   }
 

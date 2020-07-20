@@ -1,7 +1,11 @@
 import { Color } from '../utils/Color';
-import { CameraType } from '../Camera/Camera';
+import { CameraType } from '../camera/Camera';
 import { Entity } from '../object/Entity';
 import { Matrix4 } from '../utils/Matrix';
+import { ObjectToGLStructure } from '../utils/ObjectToGLStructure';
+import { LightsUniform, originalLightsUniform } from '../light/Primitives';
+import { Empty } from '../object/Empty';
+import { UniformType } from '../utils/UniformSwitcher';
 
 interface RendererParameter
 {
@@ -17,7 +21,7 @@ class Renderer {
 
   private gl : WebGLRenderingContext;
 
-  entities: Entity | null = null;
+  entities: Empty | null = null;
 
   constructor(_parameter: RendererParameter) {
     this.parameter = _parameter;
@@ -27,23 +31,50 @@ class Renderer {
     this.parameter.clearDepth = this.parameter.clearDepth || 1.0;
   }
 
-  addEntities(entity: Entity) {
-    entity.initialize(this.gl);
+  addEntities(entity: Empty) {
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities = entity;
+    this.entities.searchLight(lightsList);
+
+    const lightsUniform = ObjectToGLStructure(lightsList);
+
+    const defaultUniform = {
+      mMatrix: null,
+      vMatrix: null,
+      pMatrix: null,
+      uCameraPos: null,
+      ...lightsUniform,
+    };
+    this.entities.initialize(this.gl, defaultUniform);
   }
 
   render(camera: CameraType) {
     console.assert(!!this.entities, 'Entities are not initialized');
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.depthFunc(this.gl.LEQUAL);
+    this.gl.enable(this.gl.CULL_FACE);
 
     const clearColor: Color = <Color> this.parameter.clearColor;
     this.gl.clearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
     this.gl.clearDepth(<number> this.parameter.clearDepth);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT);
 
-    const vpMatrix: Matrix4 = camera.getMatrix();
-    (<Entity>this.entities).render(this.gl, new Matrix4(), vpMatrix);
+    if (!this.entities) return;
+    const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
+    this.entities.prepare(new Matrix4(), lightsList);
+
+    const lightsUniform: {[key: string]: UniformType} = ObjectToGLStructure(lightsList);
+
+    const option: {
+      uniforms: {[key: string]: UniformType}
+    } = {
+      uniforms: {
+        ...lightsUniform,
+        ...camera.getMatrix(),
+      },
+    };
+
+    this.entities.render(this.gl, option);
   }
 }
 

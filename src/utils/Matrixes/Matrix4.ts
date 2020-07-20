@@ -1,4 +1,5 @@
 import { Vector4 } from '../Vector';
+import { Vector3 } from '../vectors/Vector3';
 
 class Matrix4 {
   matrix: number[] = [
@@ -174,6 +175,17 @@ class Matrix4 {
 
   getArray(): Float32Array {
     return new Float32Array(this.matrix);
+  }
+
+  getScaleRotationMatrix(): Matrix4 {
+    const m = this.matrix;
+    return new Matrix4([
+      m[0], m[1], m[2], 0, m[4], m[5], m[6], 0, m[8], m[9], m[10], 0, 0, 0, 0, 1,
+    ]);
+  }
+
+  getTranslateVector(): Vector3 {
+    return new Vector3(this.matrix[12], this.matrix[13], this.matrix[14]);
   }
 }
 
