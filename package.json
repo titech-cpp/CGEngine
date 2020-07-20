@@ -1,6 +1,6 @@
 {
   "name": "cgengine",
-  "version": "0.3.0",
+  "version": "1.1.0",
   "description": "This is the 3DCG engine with WebGL",
   "main": "src/main.ts",
   "scripts": {
