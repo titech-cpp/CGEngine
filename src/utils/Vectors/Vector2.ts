@@ -44,7 +44,7 @@ class Vector2 {
   }
 
   public divide(a: Vector2 | number): Vector2 {
-    if (a instanceof Vector2){
+    if (a instanceof Vector2) {
       console.assert(!(a.x === 0 || a.y === 0), 'cannot divide by zero');
       return new Vector2(this.x / a.x, this.y / a.y);
     }
