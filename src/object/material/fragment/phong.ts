@@ -26,6 +26,10 @@ struct SpotLight {
   float decay;
 };
 
+struct AmbientLight {
+  vec4 color;
+};
+
 uniform vec4 mainColor;
 
 uniform vec3 uCameraPos;
@@ -35,6 +39,8 @@ uniform PointLight uPointLight[LIGHT_MAX];
 uniform int uPointNum;
 uniform SpotLight uSpotLight[LIGHT_MAX];
 uniform int uSpotNum;
+uniform AmbientLight uAmbientLight[LIGHT_MAX];
+uniform int uAmbientNum;
 
 varying vec3 vWorldPos;
 varying vec3 vNormal;
@@ -61,6 +67,10 @@ void spotLight(inout vec4 color, in vec3 eye, SpotLight light) {
   color += light.color * spot * factor * saturate(dot(-ldir, vNormal));
 }
 
+void ambientLight(inout vec4 color, AmbientLight light) {
+  color += light.color;
+}
+
 vec4 getLightColor(in vec3 eye) {
   vec4 color;
   for (int i=0;i<LIGHT_MAX;i++) {
@@ -74,6 +84,10 @@ vec4 getLightColor(in vec3 eye) {
   for (int i=0;i<LIGHT_MAX;i++) {
     if (i >= uSpotNum) break;
     spotLight(color, eye, uSpotLight[i]);
+  }
+  for (int i=0;i<LIGHT_MAX;i++) {
+    if (i >= uAmbientNum) break;
+    ambientLight(color, uAmbientLight[i]);
   }
   return color;
 }

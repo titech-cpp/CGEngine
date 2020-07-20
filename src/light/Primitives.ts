@@ -1,6 +1,7 @@
 import { Directional } from './lights/Directional';
 import { Point } from './lights/Point';
 import { Spot } from './lights/Spot';
+import { Ambient } from './lights/Ambient';
 import { Vector3 } from '../utils/Vector';
 import { Color } from '../utils/Color';
 
@@ -27,6 +28,10 @@ type LightsUniform = {
     penumbraCos: number,
   }[],
   uSpotNum: number,
+  uAmbientLight: {
+    color: Color,
+  }[],
+  uAmbientNum: number
 };
 
 const originalLightsUniform: string = JSON.stringify({
@@ -36,12 +41,15 @@ const originalLightsUniform: string = JSON.stringify({
   uPointNum: 0,
   uSpotLight: [],
   uSpotNum: 0,
+  uAmbientLight: [],
+  uAmbientNum: 0,
 });
 
 export {
   Directional,
   Point,
   Spot,
+  Ambient,
   LightsUniform,
   originalLightsUniform,
 };

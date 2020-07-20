@@ -84,10 +84,17 @@ window.addEventListener('load', () => {
   const point = new CGEngine.LightPrimitives.Point(new CGEngine.Color(1, 1, 1, 1), 10, 2);
   point.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.15));
   point.transform.position.set(1, 1, 0);
-  const spot = new CGEngine.LightPrimitives.Spot(new CGEngine.Color(1, 1, 1, 1), Math.PI * 0.3, Math.PI * 0.2, 30, 1);
+  const spot = new CGEngine.LightPrimitives.Spot(
+    new CGEngine.Color(1, 1, 1, 1),
+    Math.PI * 0.3,
+    Math.PI * 0.2,
+    30,
+    1,
+  );
   spot.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.3));
   spot.transform.position.set(-4, 5, 3);
-  spot.transform.lookAt(new CGEngine.Vector3(-4, -5,4));
+  spot.transform.lookAt(new CGEngine.Vector3(-4, -5, 4));
+  const ambient = new CGEngine.LightPrimitives.Ambient(new CGEngine.Color(0.1, 0, 0));
 
   const root = new CGEngine.Empty();
   root.children.push(floor);
@@ -95,6 +102,7 @@ window.addEventListener('load', () => {
   root.children.push(light);
   root.children.push(point);
   root.children.push(spot);
+  root.children.push(ambient);
 
   renderer.addEntities(root);
   let count = 0;

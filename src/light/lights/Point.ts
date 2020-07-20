@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { Light } from '../Light';
-import { Vector3, Vector4 } from '../../utils/Vector';
+import { Vector3 } from '../../utils/Vector';
 import { Matrix4 } from '../../utils/Matrix';
 import { LightsUniform } from '../Primitives';
 
