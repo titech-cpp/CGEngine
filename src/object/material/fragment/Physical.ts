@@ -1,4 +1,4 @@
-const physical = `
+const PhysicalFragment: string = `
 precision mediump float;
 
 #define saturate(x) clamp(x,0.0,1.0)
@@ -34,8 +34,8 @@ struct AmbientLight {
 
 struct NormalizedLight {
   vec3 dir;
-  vec4 color;
-}
+  vec3 color;
+};
 
 // Rendererで追加されるやつ
 uniform vec3 uCameraPos;
@@ -59,22 +59,22 @@ uniform float roughness;
 uniform float metallic;
 
 // グローバル変数
-Material {
+struct Material {
   vec3 diffuse;
   vec3 specular;
   float roughness;
-}
+};
 
 Material material;
 
 vec3 viewDir;
 
 float D(in vec3 n, in vec3 h, in float a) {
-  return (a*a)/(PI * pow(pow(dot(n,h), 2.0)*(a*a-1)+1, 2.0));
+  return (a*a)/(PI * pow(pow(dot(n,h), 2.0) * (a*a - 1.0) + 1.0, 2.0));
 }
 
 float G_Schlick(in vec3 n, in vec3 v, in float k) {
-  return dot(n, v) / (dot(n, v)(1 - k) + k);
+  return dot(n, v) / (dot(n, v) * (1.0 - k) + k);
 }
 
 float G(in vec3 n, in vec3 l, in vec3 v, in float a) {
@@ -95,14 +95,63 @@ vec3 BRDF(in NormalizedLight normalizedLight) {
   return (D(n, h, a) * G(n, l, v, a) * F(material.specular, v, h))/(4.0 * dot(n, l) * dot(n, v) + EPSILON);
 }
 
-vec3 ReflectLight(in NormalizedLight normalizedLight) {
+void ReflectLight(inout vec3 result, in NormalizedLight normalizedLight) {
   vec3 diffuse = material.diffuse / PI;
   vec3 specular = BRDF(normalizedLight);
-  result += (diffuse + specular) * normalizedLight.color.xyz * normalizedLight.color.a;
+  vec3 irradiance = saturate(dot(vNormal, normalizedLight.dir)) * normalizedLight.color * PI;
+
+  result += (diffuse + specular) * irradiance;
 }
 
-void LightCalc() {
-  ^[@]
+bool directionalLight(DirectionalLight light, inout NormalizedLight normalizedLight) {
+  normalizedLight.color = light.color.xyz * light.color.a;
+  normalizedLight.dir = light.dir;
+  return true;
+}
+
+bool pointLight(PointLight light, NormalizedLight normalizedLight) {
+  float d = distance(vWorldPos, light.pos);
+  if(light.distance < d) return false;
+  normalizedLight.color = pow(saturate(1.0 - d / light.distance), light.decay) * light.color.xyz * light.color.a;
+  normalizedLight.dir = normalize(vWorldPos - light.pos);
+  return true;
+}
+
+bool spotLight(SpotLight light, NormalizedLight normalizedLight) {
+  float d = distance(light.pos, vWorldPos);
+  vec3 ldir = normalize(vWorldPos - light.pos);
+  float c = dot(ldir, light.dir);
+  if(d > light.distance || c < light.coneCos) return false;
+  float spot = smoothstep(light.coneCos, light.penumbraCos, c);
+  float factor = pow(saturate(1.0 - d / light.distance), light.decay);
+  
+  normalizedLight.color = light.color.xyz * light.color.a * spot * factor;
+  normalizedLight.dir = normalize(vWorldPos - light.pos);
+  return true;
+}
+
+vec3 lightCalc() {
+  vec3 result = vec3(0.0);
+  NormalizedLight normalizedLight;
+
+  for(int i=0;i<LIGHT_MAX;i++) {
+    if(i >= uDirectionalNum) break;
+    directionalLight(uDirectionalLight[i], normalizedLight);
+    ReflectLight(result, normalizedLight);
+  }
+  for(int i=0;i<LIGHT_MAX;i++) {
+    if(i >= uPointNum) break;
+    if(pointLight(uPointLight[i], normalizedLight)) ReflectLight(result, normalizedLight);
+  }
+  for(int i=0;i<LIGHT_MAX;i++) {
+    if(i >= uSpotNum) break;
+    if(spotLight(uSpotLight[i], normalizedLight)) ReflectLight(result, normalizedLight);
+  }
+  for(int i=0;i<LIGHT_MAX;i++) {
+    if(i >= uAmbientNum) break;
+    result += uAmbientLight[i].color.xyz * uAmbientLight[i].color.a;
+  }
+  return result;
 }
 
 void globalValueSet() {
@@ -113,11 +162,11 @@ void globalValueSet() {
   viewDir = normalize(vWorldPos - uCameraPos);
 }
 
-vec4 
-
-void main(void)
-{
+void main(void){
   globalValueSet();
-  gl_FragColor = result;
+  vec3 result = lightCalc();
+  gl_FragColor = vec4(result, albedo.a);
 }
 `;
+
+export { PhysicalFragment };
