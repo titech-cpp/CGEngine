@@ -6,6 +6,7 @@ import { ObjectToGLStructure } from '../utils/ObjectToGLStructure';
 import { LightsUniform, originalLightsUniform } from '../light/Primitives';
 import { Empty } from '../object/Empty';
 import { UniformType } from '../utils/UniformSwitcher';
+import { Integer } from '../utils/Integer';
 
 interface RendererParameter
 {
@@ -62,6 +63,11 @@ class Renderer {
     if (!this.entities) return;
     const lightsList: LightsUniform = JSON.parse(originalLightsUniform);
     this.entities.prepare(new Matrix4(), lightsList);
+
+    lightsList.uDirectionalNum = new Integer(lightsList.uDirectionalNum);
+    lightsList.uPointNum = new Integer(lightsList.uPointNum);
+    lightsList.uSpotNum = new Integer(lightsList.uSpotNum);
+    lightsList.uAmbientNum = new Integer(lightsList.uAmbientNum);
 
     const lightsUniform: {[key: string]: UniformType} = ObjectToGLStructure(lightsList);
 

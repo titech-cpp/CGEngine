@@ -4,20 +4,21 @@ import { Spot } from './lights/Spot';
 import { Ambient } from './lights/Ambient';
 import { Vector3 } from '../utils/Vector';
 import { Color } from '../utils/Color';
+import { Integer } from '../utils/Integer';
 
 type LightsUniform = {
   uDirectionalLight: {
     dir: Vector3,
     color: Color,
   }[],
-  uDirectionalNum: number,
+  uDirectionalNum: number | Integer,
   uPointLight: {
     pos: Vector3,
     color: Color,
     distance: number,
     decay: number,
   }[],
-  uPointNum: number,
+  uPointNum: number | Integer,
   uSpotLight: {
     pos: Vector3,
     dir: Vector3,
@@ -27,11 +28,11 @@ type LightsUniform = {
     coneCos: number,
     penumbraCos: number,
   }[],
-  uSpotNum: number,
+  uSpotNum: number | Integer,
   uAmbientLight: {
     color: Color,
   }[],
-  uAmbientNum: number
+  uAmbientNum: number | Integer
 };
 
 const originalLightsUniform: string = JSON.stringify({
