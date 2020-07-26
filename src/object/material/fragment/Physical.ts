@@ -69,47 +69,13 @@ Material material;
 
 vec3 viewDir;
 
-float D(in vec3 n, in vec3 h, in float a) {
-  return (a*a)/(PI * pow(pow(dot(n,h), 2.0) * (a*a - 1.0) + 1.0, 2.0));
-}
-
-float G_Schlick(in vec3 n, in vec3 v, in float k) {
-  return dot(n, v) / (dot(n, v) * (1.0 - k) + k);
-}
-
-float G(in vec3 n, in vec3 l, in vec3 v, in float a) {
-  float k = a / 2.0;
-  return G_Schlick(n, l, k) * G_Schlick(n, v, k);
-}
-
-vec3 F(in vec3 light, in vec3 v, in vec3 h) {
-  return light + (1.0 - light) * pow(1.0 - dot(v, h), 5.0);
-}
-
-vec3 BRDF(in NormalizedLight normalizedLight) {
-  vec3 n = vNormal;
-  vec3 l = -normalizedLight.dir;
-  vec3 v = -viewDir;
-  vec3 h = normalize(l + v);
-  float a = pow(material.roughness, 2.0);
-  return (D(n, h, a) * G(n, l, v, a) * F(material.specular, v, h))/(4.0 * dot(n, l) * dot(n, v) + EPSILON);
-}
-
-void ReflectLight(inout vec3 result, in NormalizedLight normalizedLight) {
-  vec3 diffuse = material.diffuse / PI;
-  vec3 specular = BRDF(normalizedLight);
-  vec3 irradiance = saturate(dot(vNormal, normalizedLight.dir)) * normalizedLight.color * PI;
-
-  result += (diffuse + specular) * irradiance;
-}
-
-bool directionalLight(DirectionalLight light, inout NormalizedLight normalizedLight) {
+bool directionalLight(in DirectionalLight light, inout NormalizedLight normalizedLight) {
   normalizedLight.color = light.color.xyz * light.color.a;
   normalizedLight.dir = light.dir;
   return true;
 }
 
-bool pointLight(PointLight light, NormalizedLight normalizedLight) {
+bool pointLight(in PointLight light, inout NormalizedLight normalizedLight) {
   float d = distance(vWorldPos, light.pos);
   if(light.distance < d) return false;
   normalizedLight.color = pow(saturate(1.0 - d / light.distance), light.decay) * light.color.xyz * light.color.a;
@@ -117,7 +83,7 @@ bool pointLight(PointLight light, NormalizedLight normalizedLight) {
   return true;
 }
 
-bool spotLight(SpotLight light, NormalizedLight normalizedLight) {
+bool spotLight(in SpotLight light, inout NormalizedLight normalizedLight) {
   float d = distance(light.pos, vWorldPos);
   vec3 ldir = normalize(vWorldPos - light.pos);
   float c = dot(ldir, light.dir);
@@ -130,9 +96,45 @@ bool spotLight(SpotLight light, NormalizedLight normalizedLight) {
   return true;
 }
 
+float D(in vec3 n, in vec3 h, in float a) {
+  return (a*a)/(PI * pow(pow(saturate(dot(n,h)), 2.0) * (a*a - 1.0) + 1.0, 2.0));
+}
+
+float G_Schlick(in vec3 n, in vec3 v, in float k) {
+  return saturate(dot(n, v)) / (saturate(dot(n, v)) * (1.0 - k) + k);
+}
+
+float G(in vec3 n, in vec3 l, in vec3 v, in float a) {
+  float k = a * a / 2.0 + EPSILON;
+  return G_Schlick(n, l, k) * G_Schlick(n, v, k);
+}
+
+vec3 F(in vec3 light, in vec3 v, in vec3 h) {
+  return light + (1.0 - light) * pow(1.0 - saturate(dot(v, h)), 5.0);
+}
+
+vec3 BRDF(in NormalizedLight normalizedLight) {
+  vec3 n = vNormal;
+  vec3 l = -normalizedLight.dir;
+  vec3 v = -viewDir;
+  vec3 h = normalize(l + v);
+  float a = pow(material.roughness, 2.0);
+  return (F(material.specular, v, h) * D(n, h, a) * G(n, l, v, a))/(4.0 * saturate(dot(n, l)) * saturate(dot(n, v)) + EPSILON);
+}
+
+void ReflectLight(inout vec3 result, in NormalizedLight normalizedLight) {
+  vec3 diffuse = material.diffuse / PI;
+  vec3 specular = BRDF(normalizedLight);
+  vec3 irradiance = saturate(dot(vNormal, -normalizedLight.dir)) * normalizedLight.color * PI;
+
+  result += (diffuse + specular) * irradiance;
+}
+
 vec3 lightCalc() {
   vec3 result = vec3(0.0);
   NormalizedLight normalizedLight;
+  normalizedLight.dir = vec3(1.0,0.0,0.0);
+  normalizedLight.color = vec3(0.0,0.0,0.0);
 
   for(int i=0;i<LIGHT_MAX;i++) {
     if(i >= uDirectionalNum) break;
