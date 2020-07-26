@@ -1,4 +1,4 @@
-const basicVertex: string = `
+const BasicVertex: string = `
 precision mediump float;
 attribute vec3 vertex;
 attribute vec3 normal;
@@ -20,4 +20,4 @@ void main(void) {
 }
 `;
 
-export { basicVertex };
+export { BasicVertex };

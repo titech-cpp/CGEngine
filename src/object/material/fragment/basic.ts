@@ -1,4 +1,4 @@
-const basicFragment: string = `
+const BasicFragment: string = `
 precision mediump float;
 uniform vec4 mainColor;
 
@@ -8,4 +8,4 @@ void main(void)
 }
 `;
 
-export { basicFragment };
+export { BasicFragment };
