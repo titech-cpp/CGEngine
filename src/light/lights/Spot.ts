@@ -37,12 +37,12 @@ class Spot extends Light {
       pos: new Vector3(0, 0, 0),
       dir: new Vector3(0, -1, 0),
       color: this.color,
-      decay: this.decay + 0.000001,
-      coneCos: this.coneCos + 0.00001,
-      penumbraCos: this.penumbraCos + 0.000001,
-      distance: this.distance + 0.000001,
+      decay: this.decay,
+      coneCos: this.coneCos,
+      penumbraCos: this.penumbraCos,
+      distance: this.distance,
     });
-    lightsList.uSpotNum += 1;
+    lightsList.uSpotNum = <number>lightsList.uSpotNum + 1;
     super.searchLight(lightsList);
   }
 
@@ -53,7 +53,7 @@ class Spot extends Light {
 
     const dir: Vector4 = <Vector4> this.thisMat
       .getScaleRotationMatrix()
-      .multiply(new Vector4(0, -1, 0, 0));
+      .multiply(new Vector4(0, 0, -1, 0));
     lightsList.uSpotLight.push({
       pos: new Vector3(this.thisMat.matrix[12], this.thisMat.matrix[13], this.thisMat.matrix[14]),
       dir: new Vector3(dir.x, dir.y, dir.z),
@@ -63,7 +63,7 @@ class Spot extends Light {
       penumbraCos: this.penumbraCos + 0.000001,
       distance: this.distance + 0.000001,
     });
-    lightsList.uSpotNum += 1;
+    lightsList.uSpotNum = <number>lightsList.uSpotNum + 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));
   }
 }

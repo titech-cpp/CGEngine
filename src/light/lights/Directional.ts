@@ -19,7 +19,7 @@ class Directional extends Light {
       dir: new Vector3(0, 1, 0),
       color: new Color(1, 1, 1),
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uDirectionalNum = <number>lightsList.uDirectionalNum + 1;
     super.searchLight(lightsList);
   }
 
@@ -30,12 +30,12 @@ class Directional extends Light {
 
     const dir: Vector4 = <Vector4> this.thisMat
       .getScaleRotationMatrix()
-      .multiply(new Vector4(0, -1, 0, 0));
+      .multiply(new Vector4(0, 0, -1, 0));
     lightsList.uDirectionalLight.push({
       dir: new Vector3(dir.x, dir.y, dir.z).normalize(),
       color: this.color,
     });
-    lightsList.uDirectionalNum += 1;
+    lightsList.uDirectionalNum = <number>lightsList.uDirectionalNum + 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));
   }
 }

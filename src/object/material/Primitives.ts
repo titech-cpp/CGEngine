@@ -1,3 +1,4 @@
-export * from './vertex/basic';
-export * from './fragment/basic';
-export * from './fragment/phong';
+export * from './vertex/Basic';
+export * from './fragment/Basic';
+export * from './fragment/Phong';
+export * from './fragment/physical';
