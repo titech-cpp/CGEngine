@@ -1,6 +1,7 @@
 import { PerspectiveCamera } from './PerspectiveCamera';
+import { OrthographicCamera } from './Orthographic';
 
-type CameraType = PerspectiveCamera;
+type CameraType = PerspectiveCamera | OrthographicCamera;
 
 // eslint-disable-next-line no-undef
-export { CameraType, PerspectiveCamera };
+export { CameraType, PerspectiveCamera, OrthographicCamera };
