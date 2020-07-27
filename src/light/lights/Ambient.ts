@@ -17,7 +17,7 @@ class Ambient extends Light {
     lightsList.uAmbientLight.push({
       color: new Color(1, 1, 1),
     });
-    lightsList.uAmbientNum += 1;
+    lightsList.uAmbientNum = <number>lightsList.uAmbientNum + 1;
     super.searchLight(lightsList);
   }
 
@@ -29,7 +29,7 @@ class Ambient extends Light {
     lightsList.uAmbientLight.push({
       color: this.color,
     });
-    lightsList.uAmbientNum += 1;
+    lightsList.uAmbientNum = <number>lightsList.uAmbientNum + 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));
   }
 }
