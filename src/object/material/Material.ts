@@ -8,6 +8,7 @@ const compileShader = (
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.warn(source);
     throw new Error(<string>gl.getShaderInfoLog(shader));
   }
 };
