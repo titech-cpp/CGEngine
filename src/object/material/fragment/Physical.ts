@@ -1,3 +1,5 @@
+import { Primitives } from './BRDF/Reflect';
+
 const PhysicalFragmentBase: {before: string, after: string} = {
   before: `
 precision mediump float;
@@ -63,7 +65,6 @@ uniform float metallic;
 struct Material {
   vec3 diffuse;
   vec3 specular;
-  float roughness;
 };
 
 Material material;
@@ -125,7 +126,7 @@ vec3 lightCalc() {
     if(i >= uSpotNum) break;
     if(spotLight(uSpotLight[i], normalizedLight)) ReflectLight(result, normalizedLight);
   }
-  for(int i=0;i<LIGHT_MAX;i++) {
+  for(int i=0;i<LIGHT_sMAX;i++) {
     if(i >= uAmbientNum) break;
     result += uAmbientLight[i].color.xyz * uAmbientLight[i].color.a;
   }
@@ -135,7 +136,6 @@ vec3 lightCalc() {
 void globalValueSet() {
   material.diffuse = mix(albedo.xyz, vec3(0.0), metallic);
   material.specular = mix(vec3(0.04), albedo.xyz, metallic);
-  material.roughness = roughness;
 
   viewDir = normalize(vWorldPos - uCameraPos);
 }
@@ -148,65 +148,9 @@ void main(void){
   `,
 };
 
-const PhysicalBRDF: {[key: string]: string} = {
-  Blinn_Phong: `
-vec3 Diffuse(NormalizedLight normalizedLight) {
-  return material.diffuse / PI;
-}
-float D(in vec3 n, in vec3 h, in float a) {
-  return (a*a)/(PI * pow(pow(saturate(dot(n,h)), 2.0) * (a*a - 1.0) + 1.0, 2.0));
-}
-
-float G_Schlick(in vec3 n, in vec3 v, in float k) {
-  return saturate(dot(n, v)) / (saturate(dot(n, v)) * (1.0 - k) + k);
-}
-
-float G(in vec3 n, in vec3 l, in vec3 v, in float a) {
-  float k = a * a / 2.0 + EPSILON;
-  return G_Schlick(n, l, k) * G_Schlick(n, v, k);
-}
-
-vec3 F(in vec3 light, in vec3 v, in vec3 h) {
-  return light + (1.0 - light) * pow(1.0 - saturate(dot(v, h)), 5.0);
-}
-
-vec3 BRDF(in NormalizedLight normalizedLight) {
-  vec3 n = vNormal;
-  vec3 l = -normalizedLight.dir;
-  vec3 v = -viewDir;
-  vec3 h = normalize(l + v);
-  float a = pow(material.roughness, 2.0);
-  return (F(material.specular, v, h) * D(n, h, a) * G(n, l, v, a))/(4.0 * saturate(dot(n, l)) * saturate(dot(n, v)) + EPSILON);
-}
-  `,
-  Cook_Torrance: `
-vec3 Diffuse(NormalizedLight normalizedLight) {
-  return material.diffuse / PI;
-}
-float G(vec3 n, vec3 h, vec3 v, vec3 l) {
-  return min(min(1.0, 2.0 * dot(n, h) * dot(n, v) / dot(v, h)), 2.0 * dot(n, h) * dot(n, l) / dot(v, h));
-}
-float D(float a, vec3 n, vec3 h) {
-  float cosa2 = pow(dot(n, h), 2.0);
-  return exp(-(1.0 - cosa2)/(cosa2 * pow(a, 2.0))) / (a * pow(cosa2, 2.0));
-}
-vec3 F(in vec3 light, in vec3 v, in vec3 h) {
-  return light + (1.0 - light) * pow(1.0 - saturate(dot(v, h)), 5.0);
-}
-vec3 BRDF(in NormalizedLight normalizedLight) {
-  vec3 n = vNormal;
-  vec3 l = -normalizedLight.dir;
-  vec3 v = -viewDir;
-  vec3 h = normalize(l + v);
-  float a = material.roughness * material.roughness;
-  return (F(normalizedLight.color, v, h) * D(a, n, h) * G(n, h, v, l))/(PI * dot(n,l) * dot(n, v));
-}
-  `,
-};
-
 const PhysicalFragment = (_brdf?: string) => {
-  const brdf: string = _brdf || PhysicalBRDF.Blinn_Phong;
+  const brdf: string = _brdf || Primitives.Standard;
   return PhysicalFragmentBase.before + brdf + PhysicalFragmentBase.after;
 };
 
-export { PhysicalFragment, PhysicalBRDF };
+export { PhysicalFragment };
