@@ -2,7 +2,7 @@ export * from './camera/Camera';
 export * from './object/Empty';
 export * from './object/Entity';
 export * from './light/Light';
-export * as LightPrimitives from './light/Primitives';
+export * from './light/Primitives';
 export * from './object/geometry/Geometry';
 export * as GeometryPrimitives from './object/geometry/Primitives';
 export * from './object/material/Material';
