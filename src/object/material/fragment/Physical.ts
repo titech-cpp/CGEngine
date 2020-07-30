@@ -1,4 +1,4 @@
-import { Primitives } from './BRDF/Reflect';
+import { Primitives } from './BRDF/Primitives';
 
 const PhysicalFragmentBase: {before: string, after: string} = {
   before: `
