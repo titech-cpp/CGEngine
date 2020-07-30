@@ -34,12 +34,12 @@ float Diffuse(in NormalizedLight normalizedLight) {
 }
   `,
   Lambert: `
-vec3 Diffuse(in NormaalizedLight normalizedLight) {
+vec3 Diffuse(in NormalizedLight normalizedLight) {
   return material.diffuse;
 }
   `,
   NormalizedLambert: `
-vec3 Diffuse(in NormaalizedLight normalizedLight) {
+vec3 Diffuse(in NormalizedLight normalizedLight) {
   return material.diffuse / PI;
 }
   `,
@@ -49,11 +49,11 @@ const Distribution: {[key: string]: string} = {
   Beckmann: `
 float D(in float a, in vec3 n, in vec3 l, in vec3 v, in vec3 h) {
   float cosa2 = pow(dot(n, h), 2.0);
-  return exp(-(1.0 - cosa2)/(cosa2 * pow(a, 2.0))) / (a * a * pow(cosa2, 2.0));
+  return exp(-(1.0 - cosa2)/(cosa2 * pow(a, 2.0))) / (a * a * pow(cosa2, 2.0) + EPSILON);
 }
 `,
   GGX: `
-float D(in vec3 n, in vec3 h, in float a) {
+float D(in float a, in vec3 n, in vec3 l, in vec3 v, in vec3 h) {
   return (a*a)/(PI * pow(pow(saturate(dot(n,h)), 2.0) * (a * a - 1.0) + 1.0, 2.0));
 }
   `,
@@ -63,7 +63,11 @@ float D(in vec3 n, in vec3 h, in float a) {
 const GeometricalAttenuation: {[key: string]: string} = {
   G: `
 float G(in float a, in vec3 n, in vec3 l, in vec3 v, in vec3 h) {
-  return min(min(1.0, 2.0 * dot(n, h) * dot(n, v) / dot(v, h)), 2.0 * dot(n, h) * dot(n, l) / dot(v, h));
+  float dotnh = saturate(dot(n,h));
+  float dotnv = saturate(dot(n, v));
+  float dotvh = saturate(dot(v, h));
+  float dotnl = saturate(dot(n, l));
+  return min(1.0, min(2.0 * dotnh * dotnv / dotvh, 2.0 * dotnh * dotnl / dotvh));
 }
 `,
   SmithSchlickGGX: `
@@ -101,8 +105,8 @@ vec3 BRDF(in NormalizedLight normalizedLight) {
   vec3 l = -normalizedLight.dir;
   vec3 v = -viewDir;
   vec3 h = normalize(l + v);
-  float a = material.roughness * material.roughness;
-  return (F(normalizedLight.color, v, h) * D(a, n, h) * G(n, h, v, l))/(4.0 * dot(n,l) * dot(n, v));
+  float a = roughness * roughness;
+  return (F(normalizedLight.color, n, l, v, h) * D(a, n, l, v, h) * G(a, n, l, v, h))/(4.0 * dot(n,l) * dot(n, v));
 }
   `,
   Pi: `
@@ -111,8 +115,14 @@ vec3 BRDF(in NormalizedLight normalizedLight) {
   vec3 l = -normalizedLight.dir;
   vec3 v = -viewDir;
   vec3 h = normalize(l + v);
-  float a = material.roughness * material.roughness;
-  return (F(normalizedLight.color, v, h) * D(a, n, h) * G(n, h, v, l))/(PI * dot(n,l) * dot(n, v));
+  float a = roughness * roughness;
+  return (F(normalizedLight.color, n, l, v, h) * D(a, n, l, v, h) * G(a, n, l, v, h))/(PI * dot(n,l) * dot(n, v));
+}
+  `,
+  BlinnPhong: `
+vec3 BRDF(in NormalizedLight normalizedLight) {
+  float n = -(roughness - 0.5) * 20.0;
+  return material.specular * (n + 2.0) * (n + 4.0) / (8.0 * PI * (pow(2.0, -n * 0.5) + n));
 }
   `,
 };

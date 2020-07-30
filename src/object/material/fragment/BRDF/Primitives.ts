@@ -16,12 +16,10 @@ const Primitives: {[key: string]: string} = {
     Diffuse.NormalizedLambert
     + Distribution.Beckmann
     + GeometricalAttenuation.G
-    + Fresnel.Schlick + BRDF.Four,
-  TorranceSparrow:
+    + Fresnel.Schlick + BRDF.Pi,
+  BlinnPhong:
     Diffuse.NormalizedLambert
-    + Distribution.Beckmann
-    + GeometricalAttenuation.G
-    + Fresnel.Schlick + BRDF.Four,
+    + BRDF.BlinnPhong,
 };
 
 export { Primitives };

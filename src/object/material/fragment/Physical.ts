@@ -126,7 +126,7 @@ vec3 lightCalc() {
     if(i >= uSpotNum) break;
     if(spotLight(uSpotLight[i], normalizedLight)) ReflectLight(result, normalizedLight);
   }
-  for(int i=0;i<LIGHT_sMAX;i++) {
+  for(int i=0;i<LIGHT_MAX;i++) {
     if(i >= uAmbientNum) break;
     result += uAmbientLight[i].color.xyz * uAmbientLight[i].color.a;
   }
