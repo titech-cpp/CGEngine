@@ -7,6 +7,18 @@ const Plane = (): Geometry => {
     -0.5, 0.0, 0.5,
     0.5, 0.0, 0.5,
   ];
+  const tangent: number[] = [
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+    0.0, 0.0, -1.0,
+  ];
+  const bitangent: number[] = [
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 0.0,
+  ];
   const normal: number[] = [
     0.0, 1.0, 0.0,
     0.0, 1.0, 0.0,
@@ -24,7 +36,7 @@ const Plane = (): Geometry => {
     0, 2, 3,
   ];
 
-  return new Geometry(vertex, normal, uv, index);
+  return new Geometry(vertex, normal, uv, index, tangent, bitangent);
 };
 
 export { Plane };
