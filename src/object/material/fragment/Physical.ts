@@ -55,10 +55,14 @@ uniform int uAmbientNum;
 varying vec3 vWorldPos;
 varying vec3 vNormal;
 varying vec2 vUv;
+varying vec3 vTangent;
+varying vec3 vBitangent;
 
 // PBRパラメーター
 uniform vec4 albedo;
 uniform float roughness;
+uniform float roughnessX;
+uniform float roughnessY;
 uniform float metallic;
 
 // グローバル変数

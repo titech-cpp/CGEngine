@@ -1,10 +1,10 @@
 const Diffuse: {[key: string]: string} = {
-  Desney: `
+  Disney: `
 float fresnel(in float u, in float f0, in float f90) {
   return f0 + (f90 - f0) * pow(1.0 - u, 5.0); 
 }
 
-float Diffuse(in NormalizedLight normalizedLight) {
+vec3 Diffuse(in NormalizedLight normalizedLight) {
   vec3 n = vNormal;
   vec3 l = -normalizedLight.dir;
   vec3 v = -viewDir;
@@ -12,25 +12,25 @@ float Diffuse(in NormalizedLight normalizedLight) {
   float Fd90 = 0.5 + 2.0 * pow(saturate(dot(l, h)), 2.0) * roughness;
   float FL = fresnel(1.0, Fd90, saturate(dot(n, l)));
   float FV = fresnel(1.0, Fd90, saturate(dot(n, v)));
-  return material.diffuse * FL * FV / PI
+  return material.diffuse * FL * FV / PI;
 }
   `,
-  NormalizedDesney: `
+  NormalizedDisney: `
 float fresnel(in float u, in float f0, in float f90) {
   return f0 + (f90 - f0) * pow(1.0 - u, 5.0); 
 }
 
-float Diffuse(in NormalizedLight normalizedLight) {
+vec3 Diffuse(in NormalizedLight normalizedLight) {
   vec3 n = vNormal;
   vec3 l = -normalizedLight.dir;
   vec3 v = -viewDir;
   vec3 h = normalize(l + v);
   float energyBias = mix(0.0, 0.5, roughness);
   float energyFactor = mix(1.0, 1.0 / 1.51, roughness);
-  float Fd90 = enegyBias + 2.0 * pow(saturate(dot(l, h)), 2.0) * roughness;
+  float Fd90 = energyBias + 2.0 * pow(saturate(dot(l, h)), 2.0) * roughness;
   float FL = fresnel(1.0, Fd90, saturate(dot(n, l)));
   float FV = fresnel(1.0, Fd90, saturate(dot(n, v)));
-  return material.diffuse * FL * FV * energyFactor / PI
+  return material.diffuse * FL * FV * energyFactor / PI;
 }
   `,
   Lambert: `
@@ -120,6 +120,12 @@ vec3 BRDF(in NormalizedLight normalizedLight) {
 }
   `,
   BlinnPhong: `
+vec3 BRDF(in NormalizedLight normalizedLight) {
+  float n = -(roughness - 0.5) * 20.0;
+  return material.specular * (n + 2.0) * (n + 4.0) / (8.0 * PI * (pow(2.0, -n * 0.5) + n));
+}
+  `,
+  Ward: `
 vec3 BRDF(in NormalizedLight normalizedLight) {
   float n = -(roughness - 0.5) * 20.0;
   return material.specular * (n + 2.0) * (n + 4.0) / (8.0 * PI * (pow(2.0, -n * 0.5) + n));
