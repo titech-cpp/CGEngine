@@ -127,8 +127,27 @@ vec3 BRDF(in NormalizedLight normalizedLight) {
   `,
   Ward: `
 vec3 BRDF(in NormalizedLight normalizedLight) {
-  float n = -(roughness - 0.5) * 20.0;
-  return material.specular * (n + 2.0) * (n + 4.0) / (8.0 * PI * (pow(2.0, -n * 0.5) + n));
+  vec3 n = vNormal;
+  vec3 l = -normalizedLight.dir;
+  vec3 v = -viewDir;
+  vec3 h = normalize(l + v);
+  float ax = roughnessX * roughnessX;
+  float ay = roughnessY * roughnessY;
+  float c = - (pow(dot(h, vBitangent)/ax, 2.0) + pow(dot(h, vTangent)/ay, 2.0)) / pow(dot(h, n), 2.0);
+  return material.specular * exp(c) / (sqrt(dot(l, n) * dot(v, n)) * 4.0 * PI * ax * ay + EPSILON);
+}
+  `,
+  KajiyaKay: `
+vec3 BRDF(in NormalizedLight normalizedLight) {
+  vec3 n = vNormal;
+  vec3 l = -normalizedLight.dir;
+  vec3 v = -viewDir;
+  vec3 h = normalize(l + vTangent);
+  float dotlt = dot(n, l);
+  float dotlt2 = sqrt(1.0 - dotlt * dotlt);
+  float dotvt = dot(v, vTangent);
+  float dotvt2 = sqrt(1.0 - dotvt * dotvt);
+  return pow(max(dotlt2 * dotvt2 - dotlt * dotvt, 0.0), 80.0) * material.specular;
 }
   `,
 };
