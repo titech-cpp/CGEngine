@@ -6,7 +6,7 @@ export * as LightPrimitives from './light/Primitives';
 export * from './object/geometry/Geometry';
 export * as GeometryPrimitives from './object/geometry/Primitives';
 export * from './object/material/Material';
-export * as ShaderPrimitives from './object/material/Primitives';
+export * from './object/material/Primitives';
 export * from './object/transform/Transform';
 export * from './renderer/Renderer';
 export * from './utils/Color';

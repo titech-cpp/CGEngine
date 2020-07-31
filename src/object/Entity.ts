@@ -28,6 +28,7 @@ class Entity extends Empty {
 
   render(gl: WebGLRenderingContext, option: any): void {
     this.material.uniform.mMatrix = this.thisMat;
+    this.material.uniform.rMatrix = this.thisMat.getScaleRotationMatrix();
     this.material.uniform = {
       ...this.material.uniform,
       ...option.uniforms,

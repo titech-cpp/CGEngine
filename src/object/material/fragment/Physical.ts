@@ -1,4 +1,7 @@
-const PhysicalFragment: string = `
+import { Primitives } from './BRDF/Primitives';
+
+const PhysicalFragmentBase: {before: string, after: string} = {
+  before: `
 precision mediump float;
 
 #define saturate(x) clamp(x,0.0,1.0)
@@ -52,17 +55,20 @@ uniform int uAmbientNum;
 varying vec3 vWorldPos;
 varying vec3 vNormal;
 varying vec2 vUv;
+varying vec3 vTangent;
+varying vec3 vBitangent;
 
 // PBRパラメーター
 uniform vec4 albedo;
 uniform float roughness;
+uniform float roughnessX;
+uniform float roughnessY;
 uniform float metallic;
 
 // グローバル変数
 struct Material {
   vec3 diffuse;
   vec3 specular;
-  float roughness;
 };
 
 Material material;
@@ -95,35 +101,10 @@ bool spotLight(in SpotLight light, inout NormalizedLight normalizedLight) {
   normalizedLight.dir = normalize(vWorldPos - light.pos);
   return true;
 }
-
-float D(in vec3 n, in vec3 h, in float a) {
-  return (a*a)/(PI * pow(pow(saturate(dot(n,h)), 2.0) * (a*a - 1.0) + 1.0, 2.0));
-}
-
-float G_Schlick(in vec3 n, in vec3 v, in float k) {
-  return saturate(dot(n, v)) / (saturate(dot(n, v)) * (1.0 - k) + k);
-}
-
-float G(in vec3 n, in vec3 l, in vec3 v, in float a) {
-  float k = a * a / 2.0 + EPSILON;
-  return G_Schlick(n, l, k) * G_Schlick(n, v, k);
-}
-
-vec3 F(in vec3 light, in vec3 v, in vec3 h) {
-  return light + (1.0 - light) * pow(1.0 - saturate(dot(v, h)), 5.0);
-}
-
-vec3 BRDF(in NormalizedLight normalizedLight) {
-  vec3 n = vNormal;
-  vec3 l = -normalizedLight.dir;
-  vec3 v = -viewDir;
-  vec3 h = normalize(l + v);
-  float a = pow(material.roughness, 2.0);
-  return (F(material.specular, v, h) * D(n, h, a) * G(n, l, v, a))/(4.0 * saturate(dot(n, l)) * saturate(dot(n, v)) + EPSILON);
-}
-
+`,
+  after: `
 void ReflectLight(inout vec3 result, in NormalizedLight normalizedLight) {
-  vec3 diffuse = material.diffuse / PI;
+  vec3 diffuse = Diffuse(normalizedLight);
   vec3 specular = BRDF(normalizedLight);
   vec3 irradiance = saturate(dot(vNormal, -normalizedLight.dir)) * normalizedLight.color * PI;
 
@@ -159,7 +140,6 @@ vec3 lightCalc() {
 void globalValueSet() {
   material.diffuse = mix(albedo.xyz, vec3(0.0), metallic);
   material.specular = mix(vec3(0.04), albedo.xyz, metallic);
-  material.roughness = roughness;
 
   viewDir = normalize(vWorldPos - uCameraPos);
 }
@@ -169,6 +149,12 @@ void main(void){
   vec3 result = lightCalc();
   gl_FragColor = vec4(result, albedo.a);
 }
-`;
+  `,
+};
+
+const PhysicalFragment = (_brdf?: string) => {
+  const brdf: string = _brdf || Primitives.Standard;
+  return PhysicalFragmentBase.before + brdf + PhysicalFragmentBase.after;
+};
 
 export { PhysicalFragment };

@@ -43,6 +43,7 @@ class Renderer {
       mMatrix: null,
       vMatrix: null,
       pMatrix: null,
+      rMatrix: null,
       uCameraPos: null,
       ...lightsUniform,
     };

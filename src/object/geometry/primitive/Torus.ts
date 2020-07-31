@@ -5,6 +5,8 @@ const Torus = (radius: number, _tubeSegment?: number, _radialSegment?: number): 
   const radialSegment: number = _radialSegment || 10;
 
   const vertex: number[] = [];
+  const tangent: number[] = [];
+  const bitangent: number[] = [];
   const normal: number[] = [];
   const uv: number[] = [];
   const index: number[] = [];
@@ -16,7 +18,12 @@ const Torus = (radius: number, _tubeSegment?: number, _radialSegment?: number): 
       vertex.push(Math.cos(theta) * r);
       vertex.push(y);
       vertex.push(Math.sin(theta) * r);
-
+      tangent.push(Math.sin(theta + Math.PI * 0.5));
+      tangent.push(0);
+      tangent.push(Math.cos(theta + Math.PI * 0.5));
+      bitangent.push(-Math.sin(phi) * Math.cos(theta));
+      bitangent.push(Math.cos(phi));
+      bitangent.push(-Math.sin(phi) * Math.sin(theta));
       normal.push(-Math.cos(theta) * Math.cos(phi));
       normal.push(Math.sin(phi));
       normal.push(-Math.sin(theta) * Math.cos(phi));
@@ -37,7 +44,7 @@ const Torus = (radius: number, _tubeSegment?: number, _radialSegment?: number): 
       index.push((i + 1) * (tubeSegment + 1) + j + 1);
     }
   }
-  return new Geometry(vertex, normal, uv, index);
+  return new Geometry(vertex, normal, uv, index, tangent, bitangent);
 };
 
 export { Torus };
