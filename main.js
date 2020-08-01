@@ -10,6 +10,10 @@ window.addEventListener('load', () => {
   });
 
   const camera = new CGEngine.PerspectiveCamera(Math.PI * 0.5, 1, 0.01, 1000);
+  // const camera = new CGEngine.OrthographicCamera(10, canvas.width / canvas.height, 0.01, 1000);
+
+  const pbr = CGEngine.PBRPrimitives.CookTorrance;
+  console.log(pbr);
 
   camera.transform.position.z = 1;
   camera.transform.position.y = 0;
@@ -18,10 +22,12 @@ window.addEventListener('load', () => {
   const entity = new CGEngine.Entity(
     CGEngine.GeometryPrimitives.Cube(),
     new CGEngine.Material(
-      CGEngine.ShaderPrimitives.basicVertex,
-      CGEngine.ShaderPrimitives.phongFragment,
+      CGEngine.ShaderPrimitives.BasicVertex,
+      CGEngine.ShaderPrimitives.PhysicalFragment(pbr),
       {
-        mainColor: new CGEngine.Vector4(1, 0, 0, 1),
+        albedo: new CGEngine.Vector4(1, 0, 0, 1),
+        metallic: 0.5,
+        roughness: 0.4,
       },
     ),
   );
@@ -33,10 +39,12 @@ window.addEventListener('load', () => {
   const entity2 = new CGEngine.Entity(
     CGEngine.GeometryPrimitives.Torus(0.2, 50, 50),
     new CGEngine.Material(
-      CGEngine.ShaderPrimitives.basicVertex,
-      CGEngine.ShaderPrimitives.phongFragment,
+      CGEngine.ShaderPrimitives.BasicVertex,
+      CGEngine.ShaderPrimitives.PhysicalFragment(pbr),
       {
-        mainColor: new CGEngine.Vector4(0, 1, 0, 1),
+        albedo: new CGEngine.Vector4(0, 1, 0, 1),
+        metallic: 0.5,
+        roughness: 0.4,
       },
     ),
   );
@@ -47,10 +55,12 @@ window.addEventListener('load', () => {
   const entity3 = new CGEngine.Entity(
     CGEngine.GeometryPrimitives.Sphere(50, 50),
     new CGEngine.Material(
-      CGEngine.ShaderPrimitives.basicVertex,
-      CGEngine.ShaderPrimitives.phongFragment,
+      CGEngine.ShaderPrimitives.BasicVertex,
+      CGEngine.ShaderPrimitives.PhysicalFragment(pbr),
       {
-        mainColor: new CGEngine.Vector4(1, 1, 1, 1),
+        albedo: new CGEngine.Vector4(1, 1, 1, 1),
+        metallic: 0.5,
+        roughness: 0.5,
       },
     ),
   );
@@ -64,14 +74,16 @@ window.addEventListener('load', () => {
   parent.children.push(entity2);
   parent.children.push(entity3);
 
-
   const floor = new CGEngine.Entity(
     CGEngine.GeometryPrimitives.Plane(),
     new CGEngine.Material(
-      CGEngine.ShaderPrimitives.basicVertex,
-      CGEngine.ShaderPrimitives.phongFragment,
+      CGEngine.ShaderPrimitives.BasicVertex,
+      CGEngine.ShaderPrimitives.PhysicalFragment(CGEngine.PBRFunctions.Diffuse.NormalizedLambert + CGEngine.PBRFunctions.BRDF.KajiyaKay),
       {
-        mainColor: new CGEngine.Vector4(1, 1, 1, 1),
+        albedo: new CGEngine.Vector4(1, 1, 1, 1),
+        metallic: 0.9,
+        roughnessX: 1.0,
+        roughnessY: 0.5,
       },
     ),
   );
@@ -79,22 +91,22 @@ window.addEventListener('load', () => {
   floor.transform.position.y = -3.0;
   floor.transform.scale = new CGEngine.Vector3(1.0, 1.0, 1.0).multiply(10);
 
-  const light = new CGEngine.LightPrimitives.Directional(new CGEngine.Color(0.2, 0.2, 0.2, 1));
+  const light = new CGEngine.LightPrimitives.Directional(new CGEngine.Color(0.1, 0.1, 0.1, 1));
   light.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.15));
   const point = new CGEngine.LightPrimitives.Point(new CGEngine.Color(1, 1, 1, 1), 10, 2);
-  point.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.15));
+  point.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, 0));
   point.transform.position.set(1, 1, 0);
   const spot = new CGEngine.LightPrimitives.Spot(
     new CGEngine.Color(1, 1, 1, 1),
-    Math.PI * 0.3,
-    Math.PI * 0.2,
+    Math.PI * 0.1,
+    Math.PI * 0.05,
     30,
     1,
   );
-  spot.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, -Math.PI * 0.3));
-  spot.transform.position.set(-4, 5, 3);
-  spot.transform.lookAt(new CGEngine.Vector3(-4, -5, 4));
-  const ambient = new CGEngine.LightPrimitives.Ambient(new CGEngine.Color(0.1, 0, 0));
+  // spot.transform.rotation.eularAngle(new CGEngine.Vector3(0, 0, 0));
+  spot.transform.position.set(4, 3, 4);
+  spot.transform.lookAt(new CGEngine.Vector3(0, -3, 0));
+  const ambient = new CGEngine.LightPrimitives.Ambient(new CGEngine.Color(0.05, 0.05, 0.05));
 
   const root = new CGEngine.Empty();
   root.children.push(floor);
