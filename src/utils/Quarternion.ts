@@ -87,7 +87,7 @@ class Quartanion {
     }
 
     const q: number[] = [0, 0, 0, 0];
-    let v: number = Math.sqrt(element[maxIndex]) * 0.5;
+    let v: number = (Math.sqrt(element[maxIndex]) * 0.5 + 0.00001);
     q[maxIndex] = v;
     v = 0.25 / v;
 

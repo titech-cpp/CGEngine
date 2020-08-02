@@ -16,16 +16,16 @@ class Point extends Light {
   constructor(_color: Color, _distance: number, _decay?: number) {
     super();
     this.color = _color;
-    this.distance = _distance + 0.000001;
-    this.decay = _decay || 1.000001;
+    this.distance = _distance;
+    this.decay = _decay || 1;
   }
 
   searchLight(lightsList: LightsUniform):void {
     lightsList.uPointLight.push({
       pos: new Vector3(0, 0, 0),
       color: this.color,
-      distance: this.distance + 0.000001,
-      decay: this.decay + 0.000001,
+      distance: this.distance,
+      decay: this.decay,
     });
     lightsList.uPointNum = <number>lightsList.uPointNum + 1;
     super.searchLight(lightsList);
