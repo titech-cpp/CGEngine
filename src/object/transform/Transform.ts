@@ -28,7 +28,7 @@ class Transform {
   }
 
   lookAt(target: Vector3): Transform {
-    let z: Vector3 = this.position.subtract(target).normalize();
+    const z: Vector3 = this.position.subtract(target).normalize();
     const x: Vector3 = (new Vector3(0, 1, 0)).cross(z).normalize();
     const y: Vector3 = z.cross(x).normalize();
 

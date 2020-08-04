@@ -1,25 +1,22 @@
 import {
-  Diffuse,
+  DiffuseBRDF,
   Distribution,
   GeometricalAttenuation,
   Fresnel,
-  BRDF,
+  SpecularBRDF,
 } from './Functions';
 
 const Primitives: {[key: string]: string} = {
   Standard:
-    Diffuse.NormalizedLambert
+    DiffuseBRDF.NormalizedLambert
     + Distribution.GGX
     + GeometricalAttenuation.SmithSchlickGGX
-    + Fresnel.Schlick + BRDF.Four,
+    + Fresnel.Schlick + SpecularBRDF.Four,
   CookTorrance:
-    Diffuse.NormalizedLambert
+    DiffuseBRDF.NormalizedLambert
     + Distribution.Beckmann
-    + GeometricalAttenuation.G
-    + Fresnel.Schlick + BRDF.Pi,
-  BlinnPhong:
-    Diffuse.NormalizedLambert
-    + BRDF.BlinnPhong,
+    + GeometricalAttenuation.General
+    + Fresnel.Schlick + SpecularBRDF.Pi,
 };
 
 export { Primitives };

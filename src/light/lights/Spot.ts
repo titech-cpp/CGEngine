@@ -26,7 +26,7 @@ class Spot extends Light {
   ) {
     super();
     this.color = _color;
-    this.decay = _decay || 1.000001;
+    this.decay = _decay || 1;
     this.coneCos = Math.cos(_coneCos);
     this.penumbraCos = Math.cos(_penumbraCos);
     this.distance = _distance;
@@ -58,10 +58,10 @@ class Spot extends Light {
       pos: new Vector3(this.thisMat.matrix[12], this.thisMat.matrix[13], this.thisMat.matrix[14]),
       dir: new Vector3(dir.x, dir.y, dir.z),
       color: this.color,
-      decay: this.decay + 0.000001,
-      coneCos: this.coneCos + 0.000001,
-      penumbraCos: this.penumbraCos + 0.000001,
-      distance: this.distance + 0.000001,
+      decay: this.decay,
+      coneCos: this.coneCos,
+      penumbraCos: this.penumbraCos,
+      distance: this.distance,
     });
     lightsList.uSpotNum = <number>lightsList.uSpotNum + 1;
     this.children.map((child) => child.prepare(this.thisMat, lightsList));

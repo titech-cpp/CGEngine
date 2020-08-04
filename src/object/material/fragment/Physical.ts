@@ -104,8 +104,8 @@ bool spotLight(in SpotLight light, inout NormalizedLight normalizedLight) {
 `,
   after: `
 void ReflectLight(inout vec3 result, in NormalizedLight normalizedLight) {
-  vec3 diffuse = Diffuse(normalizedLight);
-  vec3 specular = BRDF(normalizedLight);
+  vec3 diffuse = DiffuseBRDF(normalizedLight);
+  vec3 specular = SpecularBRDF(normalizedLight);
   vec3 irradiance = saturate(dot(vNormal, -normalizedLight.dir)) * normalizedLight.color * PI;
 
   result += (diffuse + specular) * irradiance;
